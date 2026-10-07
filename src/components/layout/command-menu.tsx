@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import { CarFrontIcon, FileTextIcon, SearchIcon, WrenchIcon } from "lucide-react"
+import { FileTextIcon, SearchIcon } from "lucide-react"
 
 import {
   CommandDialog,
@@ -16,15 +16,15 @@ import {
 import { Button } from "@/components/ui/button"
 import { Kbd } from "@/components/ui/kbd"
 import { formatPrice } from "@/lib/format"
+import { legalLinks, navigation } from "@/lib/site"
 import { vehicles } from "@/lib/vehicles"
 
 const pages = [
-  { href: "/fahrzeuge", label: "Alle Fahrzeuge", icon: CarFrontIcon },
-  { href: "/werkstatt", label: "Werkstatttermin vereinbaren", icon: WrenchIcon },
-  { href: "/export", label: "Export & Auslandsauslieferung", icon: FileTextIcon },
-  { href: "/kontakt", label: "Kontakt & Anfahrt", icon: FileTextIcon },
-  { href: "/merkliste", label: "Merkliste", icon: FileTextIcon },
-  { href: "/vergleich", label: "Fahrzeugvergleich", icon: FileTextIcon },
+  ...navigation.flatMap((g) => g.items.filter((i) => !i.external)),
+  { href: "/kontakt", label: "Kontakt & Anfahrt" },
+  { href: "/merkliste", label: "Merkliste" },
+  { href: "/vergleich", label: "Fahrzeugvergleich" },
+  ...legalLinks,
 ]
 
 export function CommandMenu() {
@@ -101,7 +101,7 @@ export function CommandMenu() {
           <CommandGroup heading="Seiten">
             {pages.map((p) => (
               <CommandItem key={p.href} value={p.label} onSelect={() => go(p.href)}>
-                <p.icon />
+                <FileTextIcon />
                 {p.label}
               </CommandItem>
             ))}

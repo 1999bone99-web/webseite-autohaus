@@ -30,12 +30,15 @@ import {
 } from "@/components/ui/select"
 import { Spinner } from "@/components/ui/spinner"
 import { Textarea } from "@/components/ui/textarea"
+import { VehiclePicker } from "@/components/forms/vehicle-picker"
 import { inquirySchema, type InquiryValues } from "@/lib/schemas"
 
 const topicLabels: Record<InquiryValues["topic"], string> = {
   fahrzeug: "Frage zu einem Fahrzeug",
   suchauftrag: "Suchauftrag",
-  export: "Export / Auslieferung ins Ausland",
+  probefahrt: "Probefahrt",
+  rueckruf: "Rückruf erbeten",
+  mietwagen: "Mietwagen",
   finanzierung: "Finanzierung",
   sonstiges: "Sonstiges",
 }
@@ -43,7 +46,9 @@ const topicLabels: Record<InquiryValues["topic"], string> = {
 const placeholders: Record<InquiryValues["topic"], string> = {
   fahrzeug: "Ist das Fahrzeug noch verfügbar? Gibt es weitere Fotos vom Innenraum?",
   suchauftrag: "z. B. BMW 3er Touring, ab 2024, Diesel oder Hybrid, Anhängerkupplung, Head-Up, bis 45.000 €",
-  export: "Zielland, gewünschtes Fahrzeug, Abholung oder Transport?",
+  probefahrt: "Welches Fahrzeug, und wann passt es Ihnen am besten?",
+  rueckruf: "Worum geht es? Wann erreichen wir Sie am besten?",
+  mietwagen: "Gewünschter Zeitraum, Tag, Wochenende oder Woche?",
   finanzierung: "Anzahlung, Laufzeit, gewünschte Monatsrate …",
   sonstiges: "Wie können wir helfen?",
 }
@@ -53,11 +58,21 @@ export function InquiryForm({
   vehicleName,
   defaultTopic = "fahrzeug",
   onDone,
+  pickVehicle = false,
+  hideTopic = false,
+  submitLabel = "Anfrage senden",
+  defaultVehicleId,
 }: {
+  /** Vorauswahl im Fahrzeugfeld, z. B. aus ?fahrzeug= */
+  defaultVehicleId?: string
   vehicleId?: string
   vehicleName?: string
   defaultTopic?: InquiryValues["topic"]
   onDone?: () => void
+  /** Fahrzeug aus dem Bestand auswählbar machen, z. B. für Probefahrten */
+  pickVehicle?: boolean
+  hideTopic?: boolean
+  submitLabel?: string
 }) {
   const [pending, startTransition] = useTransition()
   const form = useForm<InquiryValues>({
@@ -68,7 +83,7 @@ export function InquiryForm({
       phone: "",
       message: vehicleName ? `Ich interessiere mich für den ${vehicleName}.` : "",
       topic: defaultTopic,
-      vehicleId,
+      vehicleId: vehicleId ?? defaultVehicleId,
       contactPreference: "telefon",
       privacy: false as unknown as true,
     },
@@ -94,7 +109,20 @@ export function InquiryForm({
   return (
     <form onSubmit={onSubmit} noValidate>
       <FieldGroup>
-        {!vehicleId && (
+        {pickVehicle && (
+          <Controller
+            control={form.control}
+            name="vehicleId"
+            render={({ field }) => (
+              <Field>
+                <FieldLabel htmlFor="vehicle">Fahrzeug</FieldLabel>
+                <VehiclePicker id="vehicle" value={field.value} onChange={field.onChange} />
+              </Field>
+            )}
+          />
+        )}
+
+        {!vehicleId && !hideTopic && (
           <Controller
             control={form.control}
             name="topic"
@@ -211,7 +239,7 @@ export function InquiryForm({
 
         <Button type="submit" size="lg" className="rounded-full" disabled={pending}>
           {pending && <Spinner />}
-          Anfrage senden
+          {submitLabel}
         </Button>
       </FieldGroup>
     </form>

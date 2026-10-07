@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { notFound } from "next/navigation"
-import { CheckIcon, ExternalLinkIcon, PhoneIcon } from "lucide-react"
+import { CalendarIcon, CheckIcon, ExternalLinkIcon, PhoneIcon } from "lucide-react"
 
 import { PageHeader } from "@/components/shared/page-header"
 import { SectionHeading } from "@/components/shared/section-heading"
@@ -241,6 +241,11 @@ export default async function VehiclePage({ params }: PageProps<"/fahrzeuge/[id]
                   <a href={site.phone.sales.href}>
                     <PhoneIcon /> {site.phone.sales.display}
                   </a>
+                </Button>
+                <Button asChild size="lg" variant="outline" className="rounded-full">
+                  <Link href={`/probefahrt?fahrzeug=${v.id}`}>
+                    <CalendarIcon /> Probefahrt vereinbaren
+                  </Link>
                 </Button>
                 <CompareButton id={v.id} withLabel className="rounded-full" />
               </div>

@@ -39,6 +39,7 @@ export function WorkshopForm() {
       model: "",
       licensePlate: "",
       message: "",
+      pickup: false,
       privacy: false as unknown as true,
     },
   })
@@ -182,6 +183,22 @@ export function WorkshopForm() {
             <Field>
               <FieldLabel htmlFor="w-message">Was sollen wir uns ansehen?</FieldLabel>
               <Textarea id="w-message" rows={3} placeholder="Geräusche, Warnleuchten, Wünsche …" {...field} />
+            </Field>
+          )}
+        />
+
+        <Controller
+          control={form.control}
+          name="pickup"
+          render={({ field }) => (
+            <Field orientation="horizontal">
+              <Checkbox id="w-pickup" checked={field.value} onCheckedChange={(c) => field.onChange(c === true)} />
+              <div className="grid gap-1">
+                <FieldLabel htmlFor="w-pickup" className="font-normal">
+                  Hol- und Bringservice gewünscht
+                </FieldLabel>
+                <FieldDescription>Wir holen Ihr Fahrzeug zu Hause ab und bringen es nach dem Termin zurück.</FieldDescription>
+              </div>
             </Field>
           )}
         />

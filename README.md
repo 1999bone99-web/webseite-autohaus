@@ -17,6 +17,7 @@ Spezialist für BMW Halbjahres- und Jahreswagen seit 1988.
 | Kalender | react-day-picker, date-fns |
 | Animation | motion |
 | Hinweise | sonner |
+| Rechtstexte | react-markdown, remark-gfm, @tailwindcss/typography |
 | Dark Mode | next-themes |
 
 ```bash
@@ -33,7 +34,7 @@ Kernversprechen des Hauses (bis zu 45 % unter Neupreis) überall sichtbar im Mit
 
 - **Ersparnis-Balken** an jedem Fahrzeug: Abstand zur damaligen UPE statt nur ein Preis.
 - **Datenblatt-Optik**: technische Werte (EZ, km, PS) in Geist Mono, viel Weißraum, ein einziger blauer Akzent.
-- **Schnellsuche im Hero** mit Live-Trefferzahl, **⌘K-Suche** über den Bestand.
+- **Schnellsuche im Hero** mit Live-Trefferzahl, **⌘K-Suche** über Bestand und alle Seiten.
 - **Vergleich** bis 3 Fahrzeuge mit hervorgehobenen Bestwerten, **Merkliste** ohne Konto.
 - **Finanzierungsrechner** (Beispielrechnung) und **Suchauftrag** als Ausweg, wenn nichts passt.
 - Telefon an jeder Stelle erreichbar, auf Mobil eine feste Aktionsleiste auf der Fahrzeugseite.
@@ -41,8 +42,26 @@ Kernversprechen des Hauses (bis zu 45 % unter Neupreis) überall sichtbar im Mit
 
 ## Seiten
 
-`/` · `/fahrzeuge` (Filter, Sortierung) · `/fahrzeuge/[id]` · `/vergleich` · `/merkliste` ·
-`/werkstatt` (Terminanfrage) · `/export` · `/kontakt` · `/impressum` · `/datenschutz`
+| Bereich | Seiten |
+| --- | --- |
+| Fahrzeuge | `/fahrzeuge`, `/fahrzeuge/[id]`, `/wunschfahrzeug`, `/probefahrt`, `/finanzierung`, `/vergleich`, `/merkliste` |
+| Service | `/werkstatt` (inkl. Servicetermin `#termin`), `/glasreparatur`, `/komplettraeder`, `/mietwagen` |
+| Unternehmen | `/ueber-uns`, `/ansprechpartner`, `/karriere`, Kundenstimmen (Link zu mobile.de) |
+| Kontakt | `/kontakt` (inkl. Anfahrt `#anfahrt`, Rückruf über `?anliegen=rueckruf`) |
+| Rechtliches | `/impressum`, `/datenschutz`, `/agb`, `/nutzungsbestimmungen`, `/barrierefreiheit` |
+
+Alte Adressen der bisherigen Seite (z. B. `/kontakt/impressum`, `/service/werkstatt`) werden per
+301/308 auf die neuen Seiten umgeleitet (`next.config.ts`).
+
+## Inhalte
+
+Texte, Ansprechpartner, Kompletträder, Mietwagen und Rechtstexte stammen von www.bmw-jw-marhoffer.de
+(Stand 07.10.2026):
+
+- `src/lib/content.ts` – Team, Werkstattleistungen, Finanzierung, Mietwagen, Kompletträder, Stellen
+- `src/content/rechtliches/*.md` – Rechtstexte, wörtlich übernommen (inkl. Tippfehler)
+- `src/content/mietbedingungen.md`
+- `public/images/…` – Bilder von der bisherigen Seite
 
 ## Fahrzeugbestand
 
@@ -65,11 +84,16 @@ Hinweise zu den Quelldaten:
 
 ## Vor dem Livegang offen
 
-- Bestand automatisch aktuell halten (z. B. täglicher Import oder Schnittstelle des Händlersystems)
-  statt der Momentaufnahme.
+- **Datenschutzerklärung anpassen.** Sie beschreibt die alte Seite (webauto.de-Hosting, Google Analytics,
+  AdWords, AddThis). Für die neue Seite fehlen u. a. Hosting (z. B. Vercel) und das Laden der Fahrzeugfotos
+  von webauto.de. Auf der Seite steht ein entsprechender Hinweis.
+- **Barrierefreiheitserklärung neu bewerten** (bezieht sich auf die alte Seite, ebenfalls mit Hinweis).
+- Impressum: Der Absatz „Internetseite realisiert von meinautohaus.de“ wurde weggelassen.
 - **Formulare** validieren, senden aber noch nichts (`src/app/actions.ts`). Mailversand oder CRM anbinden.
-- **Inhalte abstimmen**: Werkstattleistungen, Exportablauf und FAQ sind Entwürfe.
-- **Impressum und Datenschutz** sind Platzhalter.
+- Bestand automatisch aktuell halten statt Momentaufnahme.
+- Aktualität prüfen: Mietwagen-Angebot (Inserat von 2022), Kompletträder (Mai 2025), Frau Izzo steht auf der
+  Finanzierungsseite, aber nicht bei den Ansprechpartnern.
+- Bildrechte prüfen: Werkstatt-, Glas- und Mietwagenfoto sehen nach Stockfotos aus.
 - Markenrecht: kein BMW-Logo verwendet. Ob und wie das Autohaus BMW-Markenzeichen nutzen darf, klären.
 
 ## shadcn-Komponenten

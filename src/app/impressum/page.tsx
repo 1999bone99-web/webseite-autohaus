@@ -1,22 +1,10 @@
 import type { Metadata } from "next"
 
-import { PageHeader } from "@/components/shared/page-header"
-import { site } from "@/lib/site"
+import { LegalPage } from "@/components/shared/legal-page"
+import content from "@/content/rechtliches/impressum.md"
 
-export const metadata: Metadata = { title: "Impressum", robots: { index: false } }
+export const metadata: Metadata = { title: "Impressum" }
 
 export default function Page() {
-  return (
-    <>
-      <PageHeader crumbs={[{ label: "Impressum" }]} title="Impressum" />
-      <div className="container-page max-w-3xl py-12 text-muted-foreground">
-        <p>
-          Platzhalter. Der rechtlich geprüfte Text wird vom Autohaus geliefert und hier eingesetzt.
-        </p>
-        <p className="mt-4">
-          {site.legalName}, {site.address.street}, {site.address.zip} {site.address.city}
-        </p>
-      </div>
-    </>
-  )
+  return <LegalPage title="Impressum" content={content} />
 }

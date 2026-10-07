@@ -1,22 +1,16 @@
 import type { Metadata } from "next"
 
-import { PageHeader } from "@/components/shared/page-header"
-import { site } from "@/lib/site"
+import { LegalPage } from "@/components/shared/legal-page"
+import content from "@/content/rechtliches/datenschutz.md"
 
-export const metadata: Metadata = { title: "Datenschutz", robots: { index: false } }
+export const metadata: Metadata = { title: "Datenschutz" }
 
 export default function Page() {
   return (
-    <>
-      <PageHeader crumbs={[{ label: "Datenschutz" }]} title="Datenschutz" />
-      <div className="container-page max-w-3xl py-12 text-muted-foreground">
-        <p>
-          Platzhalter. Der rechtlich geprüfte Text wird vom Autohaus geliefert und hier eingesetzt.
-        </p>
-        <p className="mt-4">
-          {site.legalName}, {site.address.street}, {site.address.zip} {site.address.city}
-        </p>
-      </div>
-    </>
+    <LegalPage
+      title="Datenschutzerklärung"
+      content={content}
+      notice="Diese Erklärung stammt von der bisherigen Webseite. Sie beschreibt dort eingesetzte Dienste (u. a. Hosting bei webauto.de, Google Analytics, AddThis), die auf dieser Seite nicht verwendet werden. Vor dem Livegang muss sie an die neue Seite angepasst werden."
+    />
   )
 }

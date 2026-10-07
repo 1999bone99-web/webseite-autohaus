@@ -1,3 +1,4 @@
+import Image from "next/image"
 import Link from "next/link"
 import { Fragment } from "react"
 
@@ -15,11 +16,14 @@ export function PageHeader({
   description,
   crumbs,
   children,
+  image,
 }: {
   title: React.ReactNode
   description?: React.ReactNode
   crumbs: { href?: string; label: string }[]
   children?: React.ReactNode
+  /** Optionales Bild rechts neben dem Titel */
+  image?: { src: string; alt: string }
 }) {
   return (
     <section className="relative overflow-hidden border-b">
@@ -52,8 +56,15 @@ export function PageHeader({
           <div className="max-w-3xl">
             <h1 className="text-balance-tight text-4xl font-semibold sm:text-5xl lg:text-6xl">{title}</h1>
             {description && <p className="mt-4 text-pretty text-muted-foreground sm:text-lg">{description}</p>}
+            {image && children && <div className="mt-6">{children}</div>}
           </div>
-          {children}
+          {image ? (
+            <div className="relative aspect-[16/9] w-full shrink-0 overflow-hidden rounded-3xl border lg:w-[44%]">
+              <Image src={image.src} alt={image.alt} fill priority sizes="(min-width: 1024px) 44vw, 100vw" className="object-cover" />
+            </div>
+          ) : (
+            children
+          )}
         </div>
       </div>
     </section>

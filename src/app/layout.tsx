@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     default: "Marhoffer · BMW Halbjahres- und Jahreswagen in Mühlhausen",
     template: "%s · Marhoffer",
   },
-  description: `BMW Neu-, Halbjahres-, Jahres- und Gebrauchtwagen mit Wunschausstattung. Bis zu ${site.maxSavingPercent} % unter Neupreis. Seit ${site.foundedYear} in ${site.address.city} (${site.address.region}). Auslieferung im In- und Ausland.`,
+  description: `BMW Halb- und Jahreswagen mit Wunschausstattung. Bis zu ${site.maxSavingPercent} % Preisvorteil zur ehemaligen UPE. Seit ${site.foundedYear} in ${site.address.city} (${site.address.region}). Mit eigener Werkstatt.`,
 }
 
 export const viewport: Viewport = {

@@ -1,10 +1,11 @@
+import Image from "next/image"
 import Link from "next/link"
 import {
   ArrowRightIcon,
   ArrowUpRightIcon,
-  GlobeIcon,
   PhoneIcon,
   SlidersHorizontalIcon,
+  WalletIcon,
   WrenchIcon,
 } from "lucide-react"
 
@@ -17,6 +18,7 @@ import { Button } from "@/components/ui/button"
 import { VehiclePhoto } from "@/components/vehicle/vehicle-photo"
 import { VehicleVisual } from "@/components/vehicle/vehicle-visual"
 import { formatKm, formatPrice, formatRegistration } from "@/lib/format"
+import { headerImages } from "@/lib/content"
 import { site } from "@/lib/site"
 import { kwToPs, savingPercent, stockCategories, vehicles } from "@/lib/vehicles"
 
@@ -50,13 +52,15 @@ export default function HomePage() {
               <h1 className="text-balance-tight mt-6 text-[2.75rem] leading-[1.02] font-semibold sm:text-6xl xl:text-7xl">
                 BMW mit Wunsch&shy;ausstattung.{" "}
                 <span className="text-muted-foreground">
-                  Bis zu <span className="text-brand">{site.maxSavingPercent} %</span> unter Neupreis.
+                  Bis zu <span className="text-brand">{site.maxSavingPercent} %</span> Preis&shy;vorteil.*
                 </span>
               </h1>
               <p className="mt-6 max-w-xl text-pretty text-lg text-muted-foreground">
-                Seit {site.foundedYear} verkaufen wir junge BMW, die schon beim ersten Besitzer
-                hervorragend ausgestattet waren. Vom 5er bis zum X7, vom Diesel bis zum iX. Ausgeliefert in Deutschland und ins Ausland, gewartet in
-                unserer eigenen Werkstatt.
+                Seit {site.foundedYear} sind wir spezialisiert auf BMW Halb- und Jahreswagen mit
+                Wunschausstattung. Vom 5er bis zum X7, vom Diesel bis zum iX. Gewartet in unserer eigenen Werkstatt.
+              </p>
+              <p className="mt-3 text-xs text-muted-foreground">
+                * zur ehemaligen unverbindlichen Preisempfehlung des Herstellers
               </p>
             </Reveal>
             <Reveal delay={0.15} className="mt-10">
@@ -110,9 +114,9 @@ export default function HomePage() {
         <dl className="container-page grid grid-cols-2 divide-x divide-y lg:grid-cols-4 lg:divide-y-0 [&>div]:border-border">
           {[
             { k: "Seit", v: String(site.foundedYear), d: "BMW-Spezialist in Mühlhausen" },
-            { k: "Preisvorteil", v: `bis ${site.maxSavingPercent} %`, d: "gegenüber der damaligen UPE" },
-            { k: "Auslieferung", v: "In- & Ausland", d: "Für Kunden in ganz Europa" },
-            { k: "Werkstatt", v: "im Haus", d: "Service und Reparatur für BMW" },
+            { k: "Preisvorteil", v: `bis ${site.maxSavingPercent} %`, d: "zur ehemaligen UPE des Herstellers" },
+            { k: "Bestand", v: `${vehicles.length} Fahrzeuge`, d: "vom 5er bis zum XM" },
+            { k: "Werkstatt", v: "im Haus", d: "mit Hol- und Bringservice" },
           ].map((s) => (
             <div key={s.k} className="px-4 py-8 first:pl-0 sm:px-8 lg:py-10">
               <dt className="font-mono text-xs tracking-wider text-muted-foreground uppercase">{s.k}</dt>
@@ -136,6 +140,17 @@ export default function HomePage() {
           </Button>
         </div>
         <FeaturedCarousel vehicles={featured.slice(0, 8)} />
+      </section>
+
+      {/* Bilder vom Hof */}
+      <section aria-label="Eindrücke" className="overflow-hidden pb-20 lg:pb-28">
+        <div className="flex w-max animate-[marquee_60s_linear_infinite] gap-4 hover:[animation-play-state:paused] motion-reduce:animate-none">
+          {[...headerImages, ...headerImages].map((img, i) => (
+            <div key={i} className="relative aspect-[2.56/1] w-[80vw] shrink-0 overflow-hidden rounded-3xl border sm:w-[46rem]">
+              <Image src={img.src} alt={i < headerImages.length ? img.alt : ""} fill sizes="(min-width: 640px) 46rem, 80vw" className="object-cover" />
+            </div>
+          ))}
+        </div>
       </section>
 
       {/* Kategorien */}
@@ -197,15 +212,15 @@ export default function HomePage() {
             </div>
           </Reveal>
           <Reveal delay={0.08} className="lg:col-span-2">
-            <Link href="/export" className="group flex h-full min-h-80 flex-col justify-between rounded-3xl border bg-brand-soft p-8">
-              <GlobeIcon className="size-6 text-brand" />
+            <Link href="/finanzierung" className="group flex h-full min-h-80 flex-col justify-between rounded-3xl border bg-brand-soft p-8">
+              <WalletIcon className="size-6 text-brand" />
               <div>
-                <h3 className="text-2xl font-semibold tracking-tight">Export</h3>
+                <h3 className="text-2xl font-semibold tracking-tight">Finanzierung & Leasing</h3>
                 <p className="mt-3 text-muted-foreground">
-                  Wir verkaufen nicht nur in Deutschland, sondern liefern auch ins Ausland aus.
+                  Zielfinanzierung mit 12 bis 60 Monaten Laufzeit oder Leasing. Die Konditionen besprechen wir persönlich.
                 </p>
                 <span className="mt-6 inline-flex items-center gap-1 text-sm font-medium text-brand">
-                  So läuft der Export <ArrowRightIcon className="size-4 transition group-hover:translate-x-1" />
+                  Mehr erfahren <ArrowRightIcon className="size-4 transition group-hover:translate-x-1" />
                 </span>
               </div>
             </Link>
@@ -216,7 +231,8 @@ export default function HomePage() {
               <div>
                 <h3 className="text-2xl font-semibold tracking-tight">Eigene Werkstatt</h3>
                 <p className="mt-3 text-muted-foreground">
-                  Inspektion, Reifen, Reparatur. Wer bei uns kauft, kann zum Service wiederkommen. Alle anderen BMW-Fahrer auch.
+                  Wartung und Reparatur mit Originalteilen. Auf Wunsch holen wir Ihr Fahrzeug zu Hause ab und bringen es
+                  zurück.
                 </p>
                 <span className="mt-6 inline-flex items-center gap-1 text-sm font-medium">
                   Termin anfragen <ArrowRightIcon className="size-4 transition group-hover:translate-x-1" />
@@ -233,9 +249,14 @@ export default function HomePage() {
                   Wir beschreiben das Auto so genau, wie Sie es brauchen, und beantworten Fragen, bevor Sie
                   sich festlegen. Auch wenn Sie von weiter weg anrufen.
                 </p>
-                <a href={site.phone.sales.href} className="mt-6 inline-block font-mono text-lg font-medium hover:underline">
-                  {site.phone.sales.display}
-                </a>
+                <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2">
+                  <a href={site.phone.sales.href} className="font-mono text-lg font-medium hover:underline">
+                    {site.phone.sales.display}
+                  </a>
+                  <Link href="/kontakt?anliegen=rueckruf" className="text-sm font-medium text-brand hover:underline">
+                    Rückruf anfordern
+                  </Link>
+                </div>
               </div>
             </div>
           </Reveal>
@@ -246,14 +267,14 @@ export default function HomePage() {
       <section className="border-t py-20 lg:py-28">
         <div className="container-page grid gap-12 lg:grid-cols-12">
           <div className="lg:col-span-4">
-            <SectionHeading eyebrow="Ablauf" title="Vom Inserat bis vor die Haustür" />
+            <SectionHeading eyebrow="Ablauf" title="Vom Inserat bis zur Übergabe" />
           </div>
           <ol className="grid gap-px overflow-hidden rounded-3xl border bg-border sm:grid-cols-2 lg:col-span-8">
             {[
               ["Anfragen", "Per Formular direkt am Fahrzeug oder telefonisch während der Verkaufszeiten."],
               ["Beraten lassen", "Wir klären Ausstattung, Zustand und Finanzierung. Auf Wunsch schicken wir zusätzliche Fotos."],
-              ["Probefahrt oder Fernkauf", "Vorbeikommen in Mühlhausen oder alles Nötige vorab telefonisch und schriftlich klären."],
-              ["Übergabe", "Abholung bei uns in Mühlhausen oder Auslieferung ins Ausland."],
+              ["Probefahrt", "Termin online anfragen und das Fahrzeug in Mühlhausen in Ruhe Probe fahren."],
+              ["Übergabe", "Abholung bei uns in Mühlhausen. Danach kümmert sich unsere Werkstatt um Ihren BMW."],
             ].map(([t, d], i) => (
               <li key={t} className="bg-card p-8">
                 <span className="font-mono text-sm text-brand">{String(i + 1).padStart(2, "0")}</span>

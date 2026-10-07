@@ -1,15 +1,16 @@
 import type { Metadata } from "next"
-import { ClockIcon, PhoneIcon } from "lucide-react"
+import Link from "next/link"
+import { CarIcon, CheckIcon, ClockIcon, PhoneIcon } from "lucide-react"
 
 import { WorkshopForm } from "@/components/forms/workshop-form"
 import { PageHeader } from "@/components/shared/page-header"
 import { Button } from "@/components/ui/button"
-import { workshopServices } from "@/lib/schemas"
+import { workshopServices } from "@/lib/content"
 import { site } from "@/lib/site"
 
 export const metadata: Metadata = {
   title: "Werkstatt",
-  description: `BMW Service und Reparatur in ${site.address.city}. Termin online anfragen.`,
+  description: `Wartung und Reparatur für Ihren BMW in ${site.address.city}. Ausschließlich Originalteile, Hol- und Bringservice.`,
 }
 
 export default function WerkstattPage() {
@@ -17,17 +18,72 @@ export default function WerkstattPage() {
     <>
       <PageHeader
         crumbs={[{ label: "Werkstatt" }]}
-        title="Service und Reparatur für Ihren BMW"
-        description="Unsere Werkstatt arbeitet mit dem technischen Know-how, das ein BMW verlangt. Egal ob Sie Ihr Auto bei uns gekauft haben oder nicht."
+        title="Wartung und Reparatur"
+        description="Eine fachgerechte Wartung erhöht die Lebensdauer Ihres Fahrzeugs und sorgt für Sicherheit im Straßenverkehr. Bei uns kommen ausschließlich Originalteile zum Einsatz."
+        image={{ src: "/images/service/werkstatt.jpg", alt: "Arbeit an der Bremsanlage in der Werkstatt" }}
       >
-        <Button asChild size="lg" className="rounded-full">
-          <a href={site.phone.workshop.href}>
-            <PhoneIcon /> {site.phone.workshop.display}
-          </a>
-        </Button>
+        <div className="flex flex-wrap gap-2">
+          <Button asChild size="lg" className="rounded-full">
+            <Link href="#termin">Termin anfragen</Link>
+          </Button>
+          <Button asChild size="lg" variant="outline" className="rounded-full">
+            <a href={site.phone.workshop.href}>
+              <PhoneIcon /> {site.phone.workshop.display}
+            </a>
+          </Button>
+        </div>
       </PageHeader>
 
-      <div className="container-page grid gap-12 py-12 lg:grid-cols-12">
+      <section className="container-page py-12">
+        <div className="flex flex-col gap-6 rounded-3xl bg-brand p-8 text-brand-foreground sm:flex-row sm:items-center sm:justify-between sm:p-10">
+          <div className="flex gap-4">
+            <CarIcon className="mt-1 size-6 shrink-0" />
+            <div>
+              <h2 className="text-2xl font-semibold tracking-tight">Hol- und Bringservice</h2>
+              <p className="mt-1 opacity-85">
+                Wir holen Ihr Fahrzeug bequem zu Hause ab und bringen es nach dem Werkstatttermin gern wieder zurück.
+              </p>
+            </div>
+          </div>
+          <Button asChild variant="secondary" size="lg" className="shrink-0 rounded-full">
+            <Link href="#termin">Mit Abholung anfragen</Link>
+          </Button>
+        </div>
+      </section>
+
+      <section className="container-page grid gap-4 md:grid-cols-2">
+        {workshopServices.map((s) => (
+          <article key={s.title} className="rounded-3xl border bg-card p-8">
+            <h2 className="text-xl font-semibold tracking-tight">{s.title}</h2>
+            <p className="mt-2 text-muted-foreground">{s.text}</p>
+            <ul className="mt-5 grid gap-2 sm:grid-cols-2">
+              {s.items.map((i) => (
+                <li key={i} className="flex items-start gap-2 text-sm">
+                  <CheckIcon className="mt-0.5 size-4 shrink-0 text-brand" />
+                  {i}
+                </li>
+              ))}
+            </ul>
+          </article>
+        ))}
+        <article className="rounded-3xl border bg-card p-8 md:col-span-2">
+          <h2 className="text-xl font-semibold tracking-tight">Außerdem</h2>
+          <div className="mt-4 flex flex-wrap gap-2">
+            <Button asChild variant="outline" className="rounded-full">
+              <Link href="/glasreparatur">Scheiben- und Glasreparaturen</Link>
+            </Button>
+            <Button asChild variant="outline" className="rounded-full">
+              <Link href="/komplettraeder">Kompletträder</Link>
+            </Button>
+            <Button asChild variant="outline" className="rounded-full">
+              <Link href="/mietwagen">Mietwagen</Link>
+            </Button>
+            <span className="inline-flex items-center rounded-full border px-4 text-sm">Karosserie- und Lackarbeiten</span>
+          </div>
+        </article>
+      </section>
+
+      <div id="termin" className="container-page grid scroll-mt-24 gap-12 py-16 lg:grid-cols-12">
         <aside className="grid content-start gap-6 lg:col-span-4">
           <div className="rounded-2xl border bg-card p-6">
             <h2 className="flex items-center gap-2 font-semibold">
@@ -42,23 +98,19 @@ export default function WerkstattPage() {
               ))}
             </dl>
           </div>
-          <div className="rounded-2xl border bg-card p-6">
-            <h2 className="font-semibold">Leistungen</h2>
-            <ul className="mt-4 grid gap-2 text-sm">
-              {workshopServices.map((s, i) => (
-                <li key={s} className="flex gap-3">
-                  <span className="font-mono text-xs text-muted-foreground">{String(i + 1).padStart(2, "0")}</span>
-                  {s}
-                </li>
-              ))}
-            </ul>
-          </div>
+          <p className="text-sm text-muted-foreground">
+            Ansprechpartner Werkstatt: Erdinc Felek,{" "}
+            <a href={site.phone.workshop.href} className="text-brand hover:underline">
+              {site.phone.workshop.display}
+            </a>
+          </p>
         </aside>
 
         <section className="rounded-3xl border bg-card p-6 sm:p-10 lg:col-span-8">
-          <h2 className="text-2xl font-semibold tracking-tight">Termin anfragen</h2>
+          <h2 className="text-2xl font-semibold tracking-tight">Servicetermin anfragen</h2>
           <p className="mt-2 mb-8 text-muted-foreground">
-            Sie wählen einen Wunschtag, wir melden uns mit einer Bestätigung oder einem Alternativvorschlag.
+            Egal ob Wartung, Reparatur, Karosserie- oder Lackarbeiten. Sie wählen einen Wunschtag, wir melden uns mit
+            einer Bestätigung oder einem Alternativvorschlag.
           </p>
           <WorkshopForm />
         </section>

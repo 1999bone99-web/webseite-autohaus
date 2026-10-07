@@ -8,7 +8,7 @@ const phoneOrEmail = {
   privacy: z.literal(true, { error: "Bitte stimmen Sie der Datenverarbeitung zu." }),
 }
 
-export const inquiryTopics = ["fahrzeug", "suchauftrag", "export", "finanzierung", "sonstiges"] as const
+export const inquiryTopics = ["fahrzeug", "suchauftrag", "probefahrt", "rueckruf", "finanzierung", "mietwagen", "sonstiges"] as const
 
 export const inquirySchema = z.object({
   ...phoneOrEmail,
@@ -19,13 +19,14 @@ export const inquirySchema = z.object({
 export type InquiryValues = z.infer<typeof inquirySchema>
 
 export const workshopServices = [
-  "Inspektion / Service",
-  "Ölwechsel",
-  "Bremsen",
-  "Reifenwechsel / Einlagerung",
-  "Hauptuntersuchung (TÜV)",
+  "Wartung / Inspektion",
+  "BMW Ölservice",
+  "Fahrzeug-Check",
+  "Bremsen-Service",
+  "Räder- und Reifenservice",
+  "Scheiben- und Glasreparatur",
+  "Karosserie- und Lackarbeiten",
   "Reparatur / Diagnose",
-  "Klimaservice",
 ] as const
 
 export const workshopSchema = z.object({
@@ -34,5 +35,6 @@ export const workshopSchema = z.object({
   model: z.string().trim().min(2, "Welches Modell fahren Sie?"),
   licensePlate: z.string().trim().max(15).optional().or(z.literal("")),
   date: z.date({ error: "Bitte wählen Sie einen Wunschtermin." }),
+  pickup: z.boolean(),
 })
 export type WorkshopValues = z.infer<typeof workshopSchema>

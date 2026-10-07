@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { notFound } from "next/navigation"
-import { CalendarIcon, CheckIcon, ExternalLinkIcon, PhoneIcon } from "lucide-react"
+import { CalendarIcon, ExternalLinkIcon, PhoneIcon } from "lucide-react"
 
 import { PageHeader } from "@/components/shared/page-header"
 import { SectionHeading } from "@/components/shared/section-heading"
@@ -15,6 +15,7 @@ import { CompareButton, FavoriteButton } from "@/components/vehicle/garage-butto
 import { InquiryDialog } from "@/components/vehicle/inquiry-dialog"
 import { SavingMeter } from "@/components/vehicle/saving-meter"
 import { VehicleCard } from "@/components/vehicle/vehicle-card"
+import { EquipmentList } from "@/components/vehicle/equipment-list"
 import { VehicleGallery } from "@/components/vehicle/vehicle-gallery"
 import { getEquipment } from "@/lib/equipment"
 import { formatKm, formatPrice, formatRegistration } from "@/lib/format"
@@ -30,22 +31,29 @@ export async function generateMetadata({ params }: PageProps<"/fahrzeuge/[id]">)
   const v = getVehicle(id)
   if (!v) return {}
   return {
-    title: `${v.name} ${v.trim}`.trim(),
+    title: v.name,
     description: `${v.category}, EZ ${formatRegistration(v.firstRegistration)}, ${formatKm(v.mileage)}, ${kwToPs(v.powerKw)} PS, ${formatPrice(v.price)}.`,
   }
 }
 
 const co2Scale = ["A", "B", "C", "D", "E", "F", "G"] as const
+const TRIVIAL = /^(Radio|USB|Wegfahrsperre|Elektronische Wegfahrsperre|Zentralverriegelung|Servolenkung|Elektron\. Stabilitätsprogramm|Fensterheber elektrisch|Außenspiegel elektrisch|Bordcomputer|Alufelgen|Radio \/ CD|Freisprecheinrichtung)/
 
 export default async function VehiclePage({ params }: PageProps<"/fahrzeuge/[id]">) {
   const { id } = await params
   const v = getVehicle(id)
   if (!v) notFound()
 
-  const name = `${v.name} ${v.trim}`.trim()
+  const name = v.name
   const equipment = getEquipment(v.id)
+  // Die Standardgruppen aus dem Inserat (Radio, USB, Wegfahrsperre …) sagen bei diesen Fahrzeugen wenig.
+  // Sie erscheinen nur, wenn die Beschreibung keine Sonderausstattung nennt.
+  const equipmentItems = equipment.special.length
+    ? equipment.special
+    : equipment.groups.flatMap((g) => g.items).filter((i) => !TRIVIAL.test(i))
   const specs: [string, string][] = [
     ["Inserat-Nr.", v.adId],
+    ...(v.trim ? [["Inseratstitel", v.trim] as [string, string]] : []),
     ["Fahrzeugart", v.category],
     ["Erstzulassung", formatRegistration(v.firstRegistration)],
     ["Kilometerstand", formatKm(v.mileage)],
@@ -83,11 +91,8 @@ export default async function VehiclePage({ params }: PageProps<"/fahrzeuge/[id]
       />
       <PageHeader
         crumbs={[{ href: "/fahrzeuge", label: "Fahrzeuge" }, { label: v.name }]}
-        title={
-          <>
-            {v.name} <span className="text-muted-foreground">{v.trim}</span>
-          </>
-        }
+        title={v.name}
+        description={v.highlights.length ? v.highlights.slice(0, 4).join(" · ") : undefined}
       >
         <div className="flex gap-2">
           <Badge variant="outline" className="rounded-full px-3 py-1">{v.category}</Badge>
@@ -133,36 +138,16 @@ export default async function VehiclePage({ params }: PageProps<"/fahrzeuge/[id]
                   <Badge key={h} className="rounded-full bg-brand-soft px-3 py-1 text-brand">{h}</Badge>
                 ))}
               </div>
-              {equipment.special.length > 0 && (
+              {equipmentItems.length > 0 ? (
                 <div className="mt-8">
-                  <h3 className="font-mono text-xs tracking-wider text-muted-foreground uppercase">
-                    Sonderausstattung laut Inserat
+                  <h3 className="mb-3 font-mono text-xs tracking-wider text-muted-foreground uppercase">
+                    Ausstattung laut Inserat
                   </h3>
-                  <ul className="mt-3 grid gap-x-8 gap-y-2 sm:grid-cols-2">
-                    {equipment.special.map((i) => (
-                      <li key={i} className="flex items-start gap-2 text-sm">
-                        <CheckIcon className="mt-0.5 size-4 shrink-0 text-brand" />
-                        {i}
-                      </li>
-                    ))}
-                  </ul>
+                  <EquipmentList items={equipmentItems} />
                 </div>
+              ) : (
+                <p className="mt-8 text-sm text-muted-foreground">Details zur Ausstattung nennen wir Ihnen gern auf Anfrage.</p>
               )}
-              <div className="mt-10 grid gap-8 sm:grid-cols-2">
-                {equipment.groups.map((g) => (
-                  <div key={g.group}>
-                    <h3 className="font-mono text-xs tracking-wider text-muted-foreground uppercase">{g.group}</h3>
-                    <ul className="mt-3 grid gap-2">
-                      {g.items.map((i) => (
-                        <li key={i} className="flex items-start gap-2 text-sm">
-                          <CheckIcon className="mt-0.5 size-4 shrink-0 text-brand" />
-                          {i}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
-              </div>
             </TabsContent>
 
             <TabsContent value="daten" className="mt-6">

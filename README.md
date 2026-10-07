@@ -94,6 +94,8 @@ Hinweise zu den Quelldaten:
 - Aktualität prüfen: Mietwagen-Angebot (Inserat von 2022), Kompletträder (Mai 2025), Frau Izzo steht auf der
   Finanzierungsseite, aber nicht bei den Ansprechpartnern.
 - Bildrechte prüfen: Werkstatt-, Glas- und Mietwagenfoto sehen nach Stockfotos aus.
+- Logo: Die Bildmarke ist aus dem PNG der alten Seite als SVG nachgezeichnet (`src/components/layout/logo.tsx`).
+  Für eine exakte Version die Originaldatei beim Autohaus anfragen.
 - Markenrecht: kein BMW-Logo verwendet. Ob und wie das Autohaus BMW-Markenzeichen nutzen darf, klären.
 
 ## shadcn-Komponenten

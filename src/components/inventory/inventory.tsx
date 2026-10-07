@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import { SearchXIcon, SlidersHorizontalIcon, XIcon } from "lucide-react"
 
 import { activeFilterCount, Filters, useInventoryFilter } from "@/components/inventory/filters"
@@ -33,7 +34,7 @@ import {
 import { VehicleCard } from "@/components/vehicle/vehicle-card"
 import { formatKm, formatPrice } from "@/lib/format"
 import { filterVehicles, sortOptions, type SortOption } from "@/lib/search-params"
-import { bodyLabels, STOCK_DATE, vehicles, type BodyType } from "@/lib/vehicles"
+import { bodyLabels, STOCK_DATE, vehicles, type BodyType, type Vehicle } from "@/lib/vehicles"
 import Link from "next/link"
 
 const sortLabels: Record<SortOption, string> = {
@@ -43,6 +44,33 @@ const sortLabels: Record<SortOption, string> = {
   "km-auf": "Wenigste Kilometer",
   ersparnis: "Größte Ersparnis",
   neueste: "Neueste Erstzulassung",
+}
+
+const PAGE_SIZE = 24
+
+/** Zeigt die Treffer in Etappen. Ein neuer Filter setzt über den key auf die erste Etappe zurück. */
+function ResultGrid({ results }: { results: Vehicle[] }) {
+  const [count, setCount] = useState(PAGE_SIZE)
+  const visible = results.slice(0, count)
+  return (
+    <>
+      <div className="mt-6 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+        {visible.map((v) => (
+          <VehicleCard key={v.id} vehicle={v} />
+        ))}
+      </div>
+      {count < results.length && (
+        <div className="mt-10 flex flex-col items-center gap-3">
+          <p className="text-sm text-muted-foreground">
+            {visible.length} von {results.length} Fahrzeugen
+          </p>
+          <Button variant="outline" size="lg" className="rounded-full" onClick={() => setCount((c) => c + PAGE_SIZE)}>
+            Weitere {Math.min(PAGE_SIZE, results.length - count)} Fahrzeuge laden
+          </Button>
+        </div>
+      )}
+    </>
+  )
 }
 
 export function Inventory() {
@@ -130,11 +158,7 @@ export function Inventory() {
         )}
 
         {results.length ? (
-          <div className="mt-6 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-            {results.map((v) => (
-              <VehicleCard key={v.id} vehicle={v} />
-            ))}
-          </div>
+          <ResultGrid key={JSON.stringify(f)} results={results} />
         ) : (
           <Empty className="mt-6 border">
             <EmptyHeader>

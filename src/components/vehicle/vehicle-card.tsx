@@ -1,5 +1,4 @@
 import Link from "next/link"
-import { ImagesIcon } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
 import { CompareButton, FavoriteButton } from "@/components/vehicle/garage-buttons"
@@ -20,6 +19,7 @@ export function VehicleCard({ vehicle: v, className }: { vehicle: Vehicle; class
       <div className="relative">
         <VehiclePhoto
           vehicle={v}
+          showCount
           className="aspect-[4/3] transition-transform duration-500 group-hover:scale-[1.03]"
         />
         <div className="absolute top-3 left-3 flex gap-1.5">
@@ -34,11 +34,6 @@ export function VehicleCard({ vehicle: v, className }: { vehicle: Vehicle; class
           <CompareButton id={v.id} />
           <FavoriteButton id={v.id} />
         </div>
-        {v.images.length > 1 && (
-          <span className="absolute bottom-3 left-3 inline-flex items-center gap-1 rounded-full bg-background/85 px-2 py-0.5 font-mono text-[11px] backdrop-blur">
-            <ImagesIcon className="size-3" /> {v.images.length}
-          </span>
-        )}
       </div>
 
       <div className="flex flex-1 flex-col gap-4 p-5">

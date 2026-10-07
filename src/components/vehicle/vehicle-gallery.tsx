@@ -66,7 +66,7 @@ export function VehicleGallery({ vehicle: v }: { vehicle: Vehicle }) {
               current === i ? "border-brand" : "border-transparent opacity-70 hover:opacity-100"
             )}
           >
-            <VehiclePhoto vehicle={v} index={i} sizes="96px" className="aspect-[4/3]" />
+            <VehiclePhoto vehicle={v} index={i} sizes="96px" compact className="aspect-[4/3]" />
           </button>
         ))}
       </div>

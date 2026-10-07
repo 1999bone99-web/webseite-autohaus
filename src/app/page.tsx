@@ -2,7 +2,9 @@ import Image from "next/image"
 import Link from "next/link"
 import {
   ArrowRightIcon,
-  ArrowUpRightIcon,
+  CalendarIcon,
+  CarIcon,
+  PhoneCallIcon,
   PhoneIcon,
   SlidersHorizontalIcon,
   WalletIcon,
@@ -10,128 +12,106 @@ import {
 } from "lucide-react"
 
 import { FeaturedCarousel } from "@/components/home/featured-carousel"
+import { HeroSlideshow } from "@/components/home/hero-slideshow"
 import { QuickSearch } from "@/components/home/quick-search"
 import { Reveal } from "@/components/shared/reveal"
 import { SectionHeading } from "@/components/shared/section-heading"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { VehiclePhoto } from "@/components/vehicle/vehicle-photo"
-import { VehicleVisual } from "@/components/vehicle/vehicle-visual"
-import { formatKm, formatPrice, formatRegistration } from "@/lib/format"
 import { headerImages } from "@/lib/content"
+import { serializeInventory } from "@/lib/search-params"
 import { site } from "@/lib/site"
-import { kwToPs, savingPercent, stockCategories, vehicles } from "@/lib/vehicles"
+import { stockCategories, vehicles } from "@/lib/vehicles"
 
-const newestFirst = [...vehicles].sort(
-  (a, b) =>
-    Number(b.images.length > 0) - Number(a.images.length > 0) ||
-    b.firstRegistration.localeCompare(a.firstRegistration)
-)
-const hero =
-  newestFirst.find((v) => v.images.length > 0 && v.msrp && v.category === "Jahreswagen") ?? newestFirst[0]
+const featured = [...vehicles]
+  .filter((v) => v.images.length > 0)
+  .sort((a, b) => b.firstRegistration.localeCompare(a.firstRegistration))
+  .slice(0, 8)
+
+const quickFilters = [
+  ...stockCategories.map((c) => ({
+    label: c.name,
+    count: vehicles.filter((v) => v.category === c.name).length,
+    href: serializeInventory("/fahrzeuge", { kategorie: [c.name] }),
+  })),
+  ...(["Elektro", "Hybrid"] as const).map((f) => ({
+    label: f,
+    count: vehicles.filter((v) => v.fuel === f).length,
+    href: serializeInventory("/fahrzeuge", { kraftstoff: [f] }),
+  })),
+  {
+    label: "SUV",
+    count: vehicles.filter((v) => v.body === "suv").length,
+    href: serializeInventory("/fahrzeuge", { karosserie: ["suv"] }),
+  },
+  {
+    label: "bis 60.000 €",
+    count: vehicles.filter((v) => v.price <= 60_000).length,
+    href: serializeInventory("/fahrzeuge", { preisMax: 60_000 }),
+  },
+]
+
+const services = [
+  { href: "/probefahrt", icon: CalendarIcon, title: "Probefahrt", text: "Termin online anfragen" },
+  { href: "/finanzierung", icon: WalletIcon, title: "Finanzierung & Leasing", text: "Laufzeiten 12 bis 60 Monate" },
+  { href: "/werkstatt", icon: CarIcon, title: "Hol- und Bringservice", text: "Zum Werkstatttermin" },
+  { href: "/kontakt?anliegen=rueckruf", icon: PhoneCallIcon, title: "Rückrufservice", text: "Wir melden uns bei Ihnen" },
+]
 
 export default function HomePage() {
-  const featured = newestFirst.filter((v) => v.id !== hero.id)
-
   return (
     <>
-      {/* Hero */}
-      <section className="relative overflow-hidden">
-        <div className="bg-grid pointer-events-none absolute inset-0 [mask-image:radial-gradient(70%_60%_at_70%_30%,black,transparent)] opacity-70" />
-        <div className="container-page relative grid items-center gap-10 pt-10 pb-16 lg:grid-cols-12 lg:pt-20 lg:pb-24">
-          <div className="lg:col-span-6">
-            <Reveal>
-              <p className="flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-xs tracking-[0.18em] text-muted-foreground uppercase">
-                <span className="inline-flex items-center gap-2">
-                  <span className="size-1.5 rounded-full bg-success" />
-                  {vehicles.length} Fahrzeuge verfügbar
-                </span>
-                <span aria-hidden>/</span>
-                <span>Mühlhausen · Kraichgau</span>
-              </p>
-              <h1 className="text-balance-tight mt-6 text-[2.75rem] leading-[1.02] font-semibold sm:text-6xl xl:text-7xl">
-                BMW mit Wunsch&shy;ausstattung.{" "}
-                <span className="text-muted-foreground">
-                  Bis zu <span className="text-brand">{site.maxSavingPercent} %</span> Preis&shy;vorteil.*
-                </span>
-              </h1>
-              <p className="mt-6 max-w-xl text-pretty text-lg text-muted-foreground">
-                Seit {site.foundedYear} sind wir spezialisiert auf BMW Halb- und Jahreswagen mit
-                Wunschausstattung. Vom 5er bis zum X7, vom Diesel bis zum iX. Gewartet in unserer eigenen Werkstatt.
-              </p>
-              <p className="mt-3 text-xs text-muted-foreground">
-                * zur ehemaligen unverbindlichen Preisempfehlung des Herstellers
-              </p>
-            </Reveal>
-            <Reveal delay={0.15} className="mt-10">
-              <QuickSearch />
-            </Reveal>
+      {/* Hero: eigene Fotos des Autohauses, randlos */}
+      <section className="relative isolate flex min-h-[640px] items-end overflow-hidden bg-neutral-950 text-white lg:min-h-[min(86svh,860px)]">
+        <HeroSlideshow images={headerImages} />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-black/10" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/10 to-transparent" />
+        <div className="container-page relative pt-32 pb-10 lg:pb-16">
+          <p className="flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-xs tracking-[0.18em] text-white/75 uppercase">
+            <span className="inline-flex items-center gap-2">
+              <span className="size-1.5 rounded-full bg-emerald-400" />
+              {vehicles.length} Fahrzeuge verfügbar
+            </span>
+            <span aria-hidden>/</span>
+            <span>Mühlhausen · Kraichgau · seit {site.foundedYear}</span>
+          </p>
+          <h1 className="text-balance-tight mt-5 max-w-4xl text-[2.6rem] leading-[1.02] font-semibold sm:text-6xl xl:text-7xl">
+            BMW mit Wunsch&shy;ausstattung.{" "}
+            <span className="text-white/70">Bis zu {site.maxSavingPercent} % unter dem damaligen Neupreis.</span>
+          </h1>
+          <p className="mt-5 max-w-xl text-pretty text-white/80 sm:text-lg">
+            Junge Gebrauchte und Jahreswagen vom 5er bis zum X7, vom Diesel bis zum iX. Gewartet in unserer eigenen
+            Werkstatt.
+          </p>
+          <div className="mt-8 max-w-4xl text-foreground">
+            <QuickSearch />
           </div>
-
-          <Reveal delay={0.1} className="lg:col-span-6">
-            <Link
-              href={`/fahrzeuge/${hero.id}`}
-              className="group relative block overflow-hidden rounded-3xl border"
-            >
-              <VehiclePhoto
-                vehicle={hero}
-                priority
-                sizes="(min-width: 1024px) 50vw, 100vw"
-                className="aspect-[5/4] transition-transform duration-700 group-hover:scale-[1.02] sm:aspect-[4/3]"
-              />
-              <div className="absolute inset-x-0 top-0 flex items-start justify-between bg-gradient-to-b from-background/70 to-transparent p-5">
-                <div>
-                  <Badge className="rounded-full">{hero.category}</Badge>
-                  <p className="mt-3 text-xl font-semibold tracking-tight [text-shadow:0_1px_12px_var(--background)]">{hero.name}</p>
-                  <p className="text-sm text-muted-foreground [text-shadow:0_1px_12px_var(--background)]">{hero.color.name}</p>
-                </div>
-                <span className="grid size-10 place-items-center rounded-full bg-background/80 backdrop-blur transition group-hover:bg-foreground group-hover:text-background">
-                  <ArrowUpRightIcon className="size-4" />
-                </span>
-              </div>
-              <dl className="absolute inset-x-3 bottom-3 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border bg-border font-mono text-xs sm:grid-cols-4">
-                {[
-                  ["Preis", formatPrice(hero.price)],
-                  savingPercent(hero) != null
-                    ? ["Ersparnis", `−${savingPercent(hero)} %`]
-                    : ["Leistung", `${kwToPs(hero.powerKw)} PS`],
-                  ["EZ", formatRegistration(hero.firstRegistration)],
-                  ["km", formatKm(hero.mileage)],
-                ].map(([k, v]) => (
-                  <div key={k} className="bg-background/85 px-4 py-3 backdrop-blur">
-                    <dt className="text-muted-foreground">{k}</dt>
-                    <dd className="mt-0.5 font-medium text-foreground">{v}</dd>
-                  </div>
-                ))}
-              </dl>
-            </Link>
-          </Reveal>
         </div>
       </section>
 
-      {/* Kennzahlen */}
-      <section className="border-y bg-card">
-        <dl className="container-page grid grid-cols-2 divide-x divide-y lg:grid-cols-4 lg:divide-y-0 [&>div]:border-border">
-          {[
-            { k: "Seit", v: String(site.foundedYear), d: "BMW-Spezialist in Mühlhausen" },
-            { k: "Preisvorteil", v: `bis ${site.maxSavingPercent} %`, d: "zur ehemaligen UPE des Herstellers" },
-            { k: "Bestand", v: `${vehicles.length} Fahrzeuge`, d: "vom 5er bis zum XM" },
-            { k: "Werkstatt", v: "im Haus", d: "mit Hol- und Bringservice" },
-          ].map((s) => (
-            <div key={s.k} className="px-4 py-8 first:pl-0 sm:px-8 lg:py-10">
-              <dt className="font-mono text-xs tracking-wider text-muted-foreground uppercase">{s.k}</dt>
-              <dd className="mt-2 text-2xl font-semibold tracking-tight sm:text-3xl">{s.v}</dd>
-              <dd className="mt-1 text-sm text-muted-foreground">{s.d}</dd>
-            </div>
+      {/* Service-Leiste */}
+      <section className="border-b bg-card">
+        <ul className="container-page grid grid-cols-2 lg:grid-cols-4">
+          {services.map((s) => (
+            <li key={s.href} className="border-border not-last:border-r max-lg:nth-[2]:border-r-0 max-lg:nth-[-n+2]:border-b">
+              <Link href={s.href} className="group flex h-full items-center gap-4 px-2 py-6 sm:px-6">
+                <span className="grid size-10 shrink-0 place-items-center rounded-full bg-brand-soft text-brand transition group-hover:bg-brand group-hover:text-brand-foreground">
+                  <s.icon className="size-4" />
+                </span>
+                <span>
+                  <span className="block text-sm font-semibold sm:text-base">{s.title}</span>
+                  <span className="block text-xs text-muted-foreground sm:text-sm">{s.text}</span>
+                </span>
+              </Link>
+            </li>
           ))}
-        </dl>
+        </ul>
       </section>
 
       {/* Bestand */}
       <section className="container-page py-20 lg:py-28">
-        <div className="mb-10 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+        <div className="mb-8 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
           <SectionHeading eyebrow="Frisch eingetroffen" title="Aktuell auf dem Hof">
-            Jedes Fahrzeug mit vollständigem Datenblatt und dem Abstand zum damaligen Neupreis.
+            Jedes Fahrzeug mit vollständigem Datenblatt und, wo bekannt, dem Abstand zum Listenneupreis.
           </SectionHeading>
           <Button asChild variant="outline" className="rounded-full">
             <Link href="/fahrzeuge">
@@ -139,54 +119,19 @@ export default function HomePage() {
             </Link>
           </Button>
         </div>
-        <FeaturedCarousel vehicles={featured.slice(0, 8)} />
-      </section>
-
-      {/* Bilder vom Hof */}
-      <section aria-label="Eindrücke" className="overflow-hidden pb-20 lg:pb-28">
-        <div className="flex w-max animate-[marquee_60s_linear_infinite] gap-4 hover:[animation-play-state:paused] motion-reduce:animate-none">
-          {[...headerImages, ...headerImages].map((img, i) => (
-            <div key={i} className="relative aspect-[2.56/1] w-[80vw] shrink-0 overflow-hidden rounded-3xl border sm:w-[46rem]">
-              <Image src={img.src} alt={i < headerImages.length ? img.alt : ""} fill sizes="(min-width: 640px) 46rem, 80vw" className="object-cover" />
-            </div>
+        <nav aria-label="Schnellfilter" className="mb-8 flex flex-wrap gap-2">
+          {quickFilters.map((f) => (
+            <Link
+              key={f.label}
+              href={f.href}
+              className="inline-flex items-center gap-2 rounded-full border bg-card px-4 py-2 text-sm transition hover:border-foreground/30 hover:bg-muted"
+            >
+              {f.label}
+              <span className="font-mono text-xs text-muted-foreground">{f.count}</span>
+            </Link>
           ))}
-        </div>
-      </section>
-
-      {/* Kategorien */}
-      <section className="border-y bg-muted/40 py-20 lg:py-28">
-        <div className="container-page">
-          <SectionHeading eyebrow="Kurz erklärt" title="Jahreswagen oder Gebrauchtwagen?">
-            Die Begriffe klingen ähnlich, bedeuten aber beim Preis und beim Zustand einiges. Der Durchschnitt zeigt den
-            Abstand zum Listenneupreis, soweit das Inserat ihn nennt.
-          </SectionHeading>
-          <div className="mt-12 grid gap-4 sm:grid-cols-2">
-            {stockCategories.map((c, i) => {
-              const items = vehicles.filter((v) => v.category === c.name)
-              const savings = items.map(savingPercent).filter((x): x is number => x != null)
-              const avg = savings.length ? Math.round(savings.reduce((s, x) => s + x, 0) / savings.length) : 0
-              return (
-                <Reveal key={c.name} delay={i * 0.06}>
-                  <Link
-                    href={`/fahrzeuge?kategorie=${encodeURIComponent(c.name)}`}
-                    className="group flex h-full flex-col rounded-2xl border bg-card p-6 transition hover:border-foreground/30"
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="font-mono text-xs text-muted-foreground">0{i + 1}</span>
-                      <ArrowUpRightIcon className="size-4 text-muted-foreground transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-foreground" />
-                    </div>
-                    <h3 className="mt-10 text-xl font-semibold tracking-tight">{c.name}</h3>
-                    <p className="mt-2 flex-1 text-sm text-muted-foreground">{c.description}</p>
-                    <div className="mt-6 flex items-end justify-between border-t pt-4 font-mono text-xs">
-                      <span>{items.length} im Bestand</span>
-                      {avg > 0 && <span className="text-brand">Ø −{avg} %</span>}
-                    </div>
-                  </Link>
-                </Reveal>
-              )
-            })}
-          </div>
-        </div>
+        </nav>
+        <FeaturedCarousel vehicles={featured} />
       </section>
 
       {/* Leistungen */}
@@ -203,11 +148,12 @@ export default function HomePage() {
                   werden. Head-Up Display, Pano-Dach, Anhängerkupplung. Bei uns stehen sie schon auf dem Hof.
                 </p>
               </div>
-              <VehicleVisual
-                body="touring"
-                color="#1f4f9c"
-                stage={false}
-                className="pointer-events-none absolute -right-24 -bottom-8 hidden aspect-[2/1] w-[60%] opacity-90 md:block"
+              <Image
+                src="/images/kopfbilder/bmw-rot.jpg"
+                alt=""
+                fill
+                sizes="(min-width: 1024px) 40vw, 0px"
+                className="pointer-events-none -z-0 hidden object-cover object-[70%_center] opacity-60 [mask-image:linear-gradient(to_right,transparent_30%,black)] md:block"
               />
             </div>
           </Reveal>
@@ -303,7 +249,7 @@ export default function HomePage() {
                 </p>
               </div>
               <Button asChild size="lg" variant="secondary" className="h-12 rounded-full px-6 text-base">
-                <Link href="/kontakt?anliegen=suchauftrag">
+                <Link href="/wunschfahrzeug">
                   Suchauftrag anlegen <ArrowRightIcon />
                 </Link>
               </Button>

@@ -4,7 +4,7 @@ import {
   parseAsInteger,
   parseAsString,
   parseAsStringLiteral,
-} from "nuqs"
+} from "nuqs/server"
 
 import { savingPercent, type Vehicle } from "@/lib/vehicles"
 
@@ -44,7 +44,10 @@ export function filterVehicles(list: Vehicle[], f: InventoryFilter) {
       (f.kmMax == null || v.mileage <= f.kmMax)
   )
   const by: Record<SortOption, (a: Vehicle, b: Vehicle) => number> = {
-    empfohlen: () => 0,
+    // Fahrzeuge mit Fotos zuerst, dann die jüngsten
+    empfohlen: (a, b) =>
+      Number(b.images.length > 0) - Number(a.images.length > 0) ||
+      b.firstRegistration.localeCompare(a.firstRegistration),
     "preis-auf": (a, b) => a.price - b.price,
     "preis-ab": (a, b) => b.price - a.price,
     "km-auf": (a, b) => a.mileage - b.mileage,

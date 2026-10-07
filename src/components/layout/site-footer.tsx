@@ -1,6 +1,6 @@
 import Link from "next/link"
 
-import { LogoMark } from "@/components/layout/logo"
+import { LogoMark, Wordmark } from "@/components/layout/logo"
 import { contact } from "@/lib/content"
 import { legalLinks, navigation, site } from "@/lib/site"
 
@@ -9,9 +9,9 @@ export function SiteFooter() {
     <footer className="mt-24 border-t bg-foreground text-background dark:bg-card dark:text-foreground">
       <div className="container-page grid gap-12 py-16 lg:grid-cols-12">
         <div className="lg:col-span-4">
-          <div className="flex items-center gap-3">
-            <LogoMark className="[&_path]:stroke-foreground [&_rect]:fill-background dark:[&_path]:stroke-background dark:[&_rect]:fill-foreground" />
-            <span className="text-lg font-semibold tracking-tight">Marhoffer</span>
+          <div className="flex items-center gap-2.5">
+            <LogoMark className="h-[22px]" />
+            <Wordmark />
           </div>
           <p className="mt-6 max-w-sm text-2xl leading-snug font-medium tracking-tight text-balance">
             BMW Halb- und Jahreswagen mit Wunschausstattung. Seit {site.foundedYear} in Mühlhausen.

@@ -32,8 +32,8 @@ export default function UeberUnsPage() {
 
       <div className="container-page max-w-3xl py-8">
         <p className="text-xl leading-relaxed text-pretty sm:text-2xl">
-          bmw-jw-marhoffer ist ein mittelständisches Unternehmen in Mühlhausen im Kraichgau, in dem es familiär zugeht.
-          Neben dem Verkauf kümmern wir uns um Service und Reparatur rund um Ihren BMW.
+          bmw-jw-marhoffer ist ein mittelständisches Unternehmen in Mühlhausen im Kraichgau. Neben dem Verkauf kümmern wir
+          uns in der eigenen Werkstatt um Service und Reparatur rund um Ihren BMW.
         </p>
       </div>
 

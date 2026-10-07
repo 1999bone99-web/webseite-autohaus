@@ -18,14 +18,15 @@
   --card-foreground: oklch(0.17 0.012 255);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.17 0.012 255);
-  --primary: oklch(0.17 0.012 255);
-  --primary-foreground: oklch(0.985 0.002 250);
+  /* shadcn-Theme: Primär- und Akzentfarbe im Blau der bisherigen Webseite */
+  --primary: #1c69d4;
+  --primary-foreground: #ffffff;
   --secondary: oklch(0.955 0.004 250);
   --secondary-foreground: oklch(0.22 0.012 255);
   --muted: oklch(0.955 0.004 250);
   --muted-foreground: oklch(0.5 0.012 255);
-  --accent: oklch(0.945 0.008 255);
-  --accent-foreground: oklch(0.22 0.012 255);
+  --accent: #eaf1fc;
+  --accent-foreground: #123f7f;
   --destructive: oklch(0.577 0.245 27.325);
   --border: oklch(0.91 0.005 255);
   --input: oklch(0.89 0.006 255);
@@ -55,14 +56,14 @@
   --card-foreground: oklch(0.96 0.003 250);
   --popover: oklch(0.19 0.01 255);
   --popover-foreground: oklch(0.96 0.003 250);
-  --primary: oklch(0.96 0.003 250);
-  --primary-foreground: oklch(0.17 0.012 255);
+  --primary: #4d8ee6;
+  --primary-foreground: #08172e;
   --secondary: oklch(0.23 0.01 255);
   --secondary-foreground: oklch(0.96 0.003 250);
   --muted: oklch(0.23 0.01 255);
   --muted-foreground: oklch(0.7 0.01 255);
-  --accent: oklch(0.25 0.015 255);
-  --accent-foreground: oklch(0.96 0.003 250);
+  --accent: #1a2a42;
+  --accent-foreground: #dbe8fb;
   --destructive: oklch(0.704 0.191 22.216);
   --border: oklch(1 0 0 / 9%);
   --input: oklch(1 0 0 / 13%);

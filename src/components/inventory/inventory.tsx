@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { SearchXIcon, SlidersHorizontalIcon, XIcon } from "lucide-react"
 
-import { activeFilterCount, Filters, useInventoryFilter } from "@/components/inventory/filters"
+import { activeFilterCount, FilterBar, Filters, useInventoryFilter } from "@/components/inventory/filters"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
@@ -54,7 +54,7 @@ function ResultGrid({ results }: { results: Vehicle[] }) {
   const visible = results.slice(0, count)
   return (
     <>
-      <div className="mt-6 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+      <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {visible.map((v) => (
           <VehicleCard key={v.id} vehicle={v} />
         ))}
@@ -91,24 +91,22 @@ export function Inventory() {
   ]
 
   return (
-    <div className="container-page grid gap-10 py-10 lg:grid-cols-[280px_minmax(0,1fr)]">
-      <aside className="hidden lg:block">
-        <div className="sticky top-24">
-          <p className="mb-2 font-mono text-xs tracking-wider text-muted-foreground uppercase">Filter</p>
-          <Filters />
-        </div>
-      </aside>
+    <div className="container-page pt-8 pb-10">
+      <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+        <h1 className="text-balance-tight text-3xl font-semibold sm:text-4xl">Fahrzeugbestand</h1>
+        <p className="text-muted-foreground" aria-live="polite">
+          <span className="font-mono font-medium text-foreground">{results.length}</span>
+          {results.length === vehicles.length ? " Fahrzeuge" : ` von ${vehicles.length} Fahrzeugen`}
+        </p>
+      </div>
 
       <div>
-        <div className="flex flex-wrap items-center gap-3">
-          <p className="mr-auto text-sm text-muted-foreground" aria-live="polite">
-            <span className="font-mono text-base font-medium text-foreground">{results.length}</span> von{" "}
-            {vehicles.length} Fahrzeugen
-          </p>
+        <div className="sticky top-16 z-30 -mx-4 mt-5 flex flex-wrap items-center gap-2 border-b bg-background/90 px-4 py-3 backdrop-blur-xl sm:-mx-6 sm:px-6 lg:-mx-10 lg:px-10">
+          <FilterBar className="mr-auto hidden lg:flex" />
 
           <Sheet>
             <SheetTrigger asChild>
-              <Button variant="outline" className="rounded-full lg:hidden">
+              <Button variant="outline" className="mr-auto rounded-full lg:hidden">
                 <SlidersHorizontalIcon />
                 Filter
                 {active > 0 && <Badge className="ml-1 h-5 rounded-full bg-brand px-1.5 font-mono">{active}</Badge>}
@@ -133,7 +131,7 @@ export function Inventory() {
           </Sheet>
 
           <Select value={f.sort} onValueChange={(v) => void setF({ sort: v as SortOption })}>
-            <SelectTrigger className="w-52 rounded-full" aria-label="Sortierung">
+            <SelectTrigger className="h-9 w-52 rounded-full" aria-label="Sortierung">
               <SelectValue />
             </SelectTrigger>
             <SelectContent align="end">
@@ -147,7 +145,7 @@ export function Inventory() {
         </div>
 
         {chips.length > 0 && (
-          <div className="mt-4 flex flex-wrap gap-2">
+          <div className="mt-4 flex flex-wrap gap-2 lg:hidden">
             {chips.map((c) => (
               <Button key={c.label} variant="secondary" size="sm" className="rounded-full" onClick={() => void c.clear()}>
                 {c.label}

@@ -1,0 +1,82 @@
+import type { Metadata } from "next"
+import { Suspense } from "react"
+import { NavigationIcon } from "lucide-react"
+
+import { UrlInquiry } from "@/components/forms/url-inquiry"
+import { PageHeader } from "@/components/shared/page-header"
+import { Button } from "@/components/ui/button"
+import { Skeleton } from "@/components/ui/skeleton"
+import { contact } from "@/lib/content"
+import { site } from "@/lib/site"
+
+export const metadata: Metadata = {
+  title: "Kontakt & Anfahrt",
+  description: `${site.legalName}, ${site.address.street}, ${site.address.zip} ${site.address.city}.`,
+}
+
+export default function KontaktPage() {
+  return (
+    <>
+      <PageHeader
+        crumbs={[{ label: "Kontakt" }]}
+        title="Sprechen Sie mit uns"
+        description="Am schnellsten geht es telefonisch während der Verkaufszeiten. Sie können uns auch schreiben oder um einen Rückruf bitten."
+      />
+
+      <div className="container-page grid gap-12 py-12 lg:grid-cols-12">
+        <div className="grid content-start gap-4 lg:col-span-5">
+          {[
+            { title: "Verkauf", phone: site.phone.sales, hours: site.hours.sales },
+            { title: "Werkstatt", phone: site.phone.workshop, hours: site.hours.workshop },
+          ].map((b) => (
+            <div key={b.title} className="rounded-2xl border bg-card p-6">
+              <p className="font-mono text-xs tracking-wider text-muted-foreground uppercase">{b.title}</p>
+              <a href={b.phone.href} className="mt-2 block text-2xl font-semibold tracking-tight hover:text-brand">
+                {b.phone.display}
+              </a>
+              <dl className="mt-4 grid gap-1 text-sm">
+                {b.hours.map((h) => (
+                  <div key={h.days} className="flex justify-between gap-4">
+                    <dt className="text-muted-foreground">{h.days}</dt>
+                    <dd className="text-right font-mono">{h.time}</dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+          ))}
+
+          <div id="anfahrt" className="relative scroll-mt-24 overflow-hidden rounded-2xl border bg-card">
+            <div className="flex items-end justify-between gap-4 p-6">
+              <address className="text-sm not-italic">
+                <span className="font-semibold">{site.legalName}</span>
+                <br />
+                {site.address.street} ({site.address.addition})
+                <br />
+                {site.address.zip} {site.address.city} · {site.address.region}
+                <br />
+                <a href={`mailto:${contact.email}`} className="text-brand hover:underline">
+                  {contact.email}
+                </a>
+                <br />
+                <span className="text-muted-foreground">Fax {contact.fax}</span>
+              </address>
+              <Button asChild variant="outline" className="shrink-0 rounded-full">
+                <a href={site.mapsUrl} target="_blank" rel="noopener noreferrer">
+                  <NavigationIcon /> Route
+                </a>
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        <section className="rounded-2xl border bg-card p-6 sm:p-10 lg:col-span-7">
+          <h2 className="text-2xl font-semibold tracking-tight">Nachricht schreiben</h2>
+          <p className="mt-2 mb-8 text-muted-foreground">Für Fahrzeugfragen, Rückrufwünsche, Finanzierung oder Mietwagen.</p>
+          <Suspense fallback={<Skeleton className="h-[560px]" />}>
+            <UrlInquiry pickVehicle />
+          </Suspense>
+        </section>
+      </div>
+    </>
+  )
+}

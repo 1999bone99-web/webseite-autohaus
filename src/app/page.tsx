@@ -3,10 +3,8 @@ import Link from "next/link"
 import { ArrowRightIcon } from "lucide-react"
 
 import { FeaturedCarousel } from "@/components/home/featured-carousel"
-import { HeroSlideshow } from "@/components/home/hero-slideshow"
 import { QuickSearch } from "@/components/home/quick-search"
 import { Button } from "@/components/ui/button"
-import { headerImages } from "@/lib/content"
 import { serializeInventory } from "@/lib/search-params"
 import { site } from "@/lib/site"
 import { savingPercent, stockCategories, vehicles } from "@/lib/vehicles"
@@ -52,11 +50,18 @@ const services = [
 export default function HomePage() {
   return (
     <>
-      {/* Hero: eigene Fotos des Autohauses, langsam überblendet und stark abgedunkelt */}
+      {/* Hero: ein ruhiges, eigenes Foto des Autohauses */}
       <section className="relative isolate flex min-h-[600px] items-end overflow-hidden bg-neutral-950 text-white lg:min-h-[min(80svh,800px)]">
-        <HeroSlideshow images={headerImages} />
-        <div className="absolute inset-0 bg-black/45" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+        <Image
+          src="/images/kopfbilder/bmw-blau.jpg"
+          alt="Blauer BMW X6 mit dem Kennzeichen des Autohauses im Parkhaus"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-[70%_center]"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/40 to-black/10" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
         <div className="container-page relative pt-32 pb-10 lg:pb-16">
           <h1 className="text-balance-tight max-w-3xl text-[2.5rem] leading-[1.05] font-semibold sm:text-6xl">
             BMW mit Wunschausstattung, bis zu {site.maxSavingPercent} % unter dem damaligen Neupreis.

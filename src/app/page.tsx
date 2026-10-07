@@ -53,12 +53,12 @@ export default function HomePage() {
       {/* Hero: ein ruhiges, eigenes Foto des Autohauses */}
       <section className="relative isolate flex min-h-[600px] items-end overflow-hidden bg-neutral-950 text-white lg:min-h-[min(80svh,800px)]">
         <Image
-          src="/images/kopfbilder/bmw-blau.jpg"
-          alt="Blauer BMW X6 mit dem Kennzeichen des Autohauses im Parkhaus"
+          src="/images/kopfbilder/bmw-weiss.jpg"
+          alt="Weißer BMW 2er Gran Coupé mit dem Kennzeichen des Autohauses"
           fill
           priority
           sizes="100vw"
-          className="object-cover object-[70%_center]"
+          className="object-cover object-[70%_60%]"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/40 to-black/10" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
@@ -127,11 +127,11 @@ export default function HomePage() {
         <div className="container-page grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
           <div className="relative aspect-[4/3] overflow-hidden rounded-2xl lg:aspect-[5/4]">
             <Image
-              src="/images/kopfbilder/bmw-weiss.jpg"
-              alt="Weißer BMW 2er Gran Coupé mit dem Kennzeichen des Autohauses"
+              src="/images/kopfbilder/bmw-rot.jpg"
+              alt="Roter BMW M8 Cabrio mit dem Kennzeichen des Autohauses am Hafen"
               fill
               sizes="(min-width: 1024px) 50vw, 100vw"
-              className="object-cover"
+              className="object-cover object-[62%_center]"
             />
           </div>
           <div className="max-w-xl">

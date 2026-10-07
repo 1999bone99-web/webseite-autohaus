@@ -36,7 +36,7 @@ export default function ProbefahrtPage() {
             Bitte bringen Sie zur Probefahrt Ihren Führerschein mit. Wir bestätigen den Termin persönlich.
           </p>
         </aside>
-        <section className="rounded-3xl border bg-card p-6 sm:p-10 lg:col-span-8">
+        <section className="rounded-2xl border bg-card p-6 sm:p-10 lg:col-span-8">
           <h2 className="text-2xl font-semibold tracking-tight">Terminwunsch</h2>
           <p className="mt-2 mb-8 text-muted-foreground">Nennen Sie im Nachrichtenfeld gern zwei, drei mögliche Tage.</p>
           <Suspense fallback={<Skeleton className="h-[600px]" />}>

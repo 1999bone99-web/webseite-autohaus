@@ -267,7 +267,7 @@ export default async function VehiclePage({ params }: PageProps<"/fahrzeuge/[id]
       </div>
 
       <section className="container-page mt-16 pb-24 lg:pb-0">
-        <SectionHeading eyebrow="Passt vielleicht auch" title="Ähnliche Fahrzeuge" />
+        <SectionHeading title="Ähnliche Fahrzeuge" />
         <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {similarVehicles(v).map((o) => (
             <VehicleCard key={o.id} vehicle={o} />

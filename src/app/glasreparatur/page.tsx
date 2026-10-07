@@ -34,31 +34,18 @@ export default function GlasreparaturPage() {
         </div>
       </PageHeader>
 
-      <div className="container-page grid gap-4 py-12 md:grid-cols-3">
-        {[
-          ["bis zu 70 %", "aller Steinschläge sind reparabel."],
-          ["unter 1 Stunde", "dauert die Reparatur in den meisten Fällen."],
-          ["Folgetag", "Spätestens dann liefern wir jede BMW Originalscheibe, falls ein Austausch nötig ist."],
-        ].map(([k, v]) => (
-          <div key={k} className="rounded-3xl border bg-card p-8">
-            <p className="text-3xl font-semibold tracking-tight">{k}</p>
-            <p className="mt-2 text-muted-foreground">{v}</p>
-          </div>
-        ))}
-      </div>
-
-      <div className="container-page grid max-w-4xl gap-6 text-pretty">
+      <div className="container-page grid max-w-3xl gap-6 py-12 text-pretty sm:text-lg">
         <p>
-          Mit der Scheibenreparatur von Marhoffer beheben wir den Glasschaden schnell und günstig und verwenden dabei nur
-          hochwertige Materialien und Werkzeuge. Oft trägt die Kaskoversicherung die Kosten, ohne Anrechnung auf Ihre
-          Selbstbeteiligung. So sparen Sie sich das Geld für einen Austausch.
+          Bis zu 70 % aller Steinschläge lassen sich reparieren. Meist ist das in weniger als einer Stunde erledigt, und oft
+          übernimmt die Kaskoversicherung die Kosten, ohne Anrechnung auf Ihre Selbstbeteiligung. Wir arbeiten dabei mit
+          hochwertigen Materialien und Werkzeugen.
         </p>
         <p>
           Eine beschädigte Scheibe beeinträchtigt Ihre Sicht und Ihre Sicherheit. Wann genau repariert werden darf, sagt
           Ihnen Ihr Service-Berater im persönlichen Gespräch. Ist der Schaden nicht mehr zu reparieren, tauschen wir die
-          Scheibe gegen eine neue aus.
+          Scheibe aus. Jede BMW Originalscheibe können wir spätestens am Folgetag liefern.
         </p>
-        <p className="rounded-2xl bg-muted p-5 text-sm">
+        <p className="rounded-xl bg-muted p-5 text-sm sm:text-base">
           Öffnungszeiten Glasservice: Mo – Fr 08:00 – 17:00 Uhr · Telefon{" "}
           <a href={site.phone.workshop.href} className="font-medium text-brand hover:underline">
             {site.phone.workshop.display}

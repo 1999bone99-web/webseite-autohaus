@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import { Suspense } from "react"
-import { MapPinIcon, NavigationIcon } from "lucide-react"
+import { NavigationIcon } from "lucide-react"
 
 import { UrlInquiry } from "@/components/forms/url-inquiry"
 import { PageHeader } from "@/components/shared/page-header"
@@ -20,7 +20,7 @@ export default function KontaktPage() {
       <PageHeader
         crumbs={[{ label: "Kontakt" }]}
         title="Sprechen Sie mit uns"
-        description="Am schnellsten geht es telefonisch während der Verkaufszeiten. Oder Sie schreiben uns oder wünschen einen Rückruf, dann melden wir uns."
+        description="Am schnellsten geht es telefonisch während der Verkaufszeiten. Sie können uns auch schreiben oder um einen Rückruf bitten."
       />
 
       <div className="container-page grid gap-12 py-12 lg:grid-cols-12">
@@ -46,11 +46,6 @@ export default function KontaktPage() {
           ))}
 
           <div id="anfahrt" className="relative scroll-mt-24 overflow-hidden rounded-2xl border bg-card">
-            <div className="bg-grid relative grid h-48 place-items-center bg-muted/50">
-              <span className="grid size-12 place-items-center rounded-full bg-brand text-brand-foreground shadow-lg ring-8 ring-brand/15">
-                <MapPinIcon className="size-5" />
-              </span>
-            </div>
             <div className="flex items-end justify-between gap-4 p-6">
               <address className="text-sm not-italic">
                 <span className="font-semibold">{site.legalName}</span>
@@ -74,7 +69,7 @@ export default function KontaktPage() {
           </div>
         </div>
 
-        <section className="rounded-3xl border bg-card p-6 sm:p-10 lg:col-span-7">
+        <section className="rounded-2xl border bg-card p-6 sm:p-10 lg:col-span-7">
           <h2 className="text-2xl font-semibold tracking-tight">Nachricht schreiben</h2>
           <p className="mt-2 mb-8 text-muted-foreground">Für Fahrzeugfragen, Rückrufwünsche, Finanzierung oder Mietwagen.</p>
           <Suspense fallback={<Skeleton className="h-[560px]" />}>

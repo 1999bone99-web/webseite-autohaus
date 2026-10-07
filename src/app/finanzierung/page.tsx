@@ -21,12 +21,11 @@ export default function FinanzierungPage() {
       <PageHeader
         crumbs={[{ href: "/fahrzeuge", label: "Fahrzeuge" }, { label: "Finanzierung & Leasing" }]}
         title="Finanzierung & Leasing"
-        description="Entscheidungsfreiheit mit der Zielfinanzierung oder finanzielle Flexibilität mit Leasing. Die Konditionen besprechen wir persönlich mit Ihnen."
+        description="Sie können Ihr Fahrzeug mit einer Zielfinanzierung kaufen oder leasen. Die Konditionen besprechen wir im Gespräch."
       />
       <div className="container-page grid gap-6 py-12 lg:grid-cols-2">
-        <section className="rounded-3xl border bg-card p-8">
-          <p className="font-mono text-xs tracking-[0.18em] text-brand uppercase">Eigentum</p>
-          <h2 className="mt-3 text-3xl font-semibold tracking-tight">{financing.target.title}</h2>
+        <section className="rounded-2xl border bg-card p-8">
+          <h2 className=" text-3xl font-semibold tracking-tight">{financing.target.title}</h2>
           <p className="mt-4 text-muted-foreground">{financing.target.text}</p>
           <ul className="mt-6 grid gap-2">
             {financing.target.benefits.map((b) => (
@@ -37,17 +36,9 @@ export default function FinanzierungPage() {
             ))}
           </ul>
         </section>
-        <section className="rounded-3xl border bg-card p-8">
-          <p className="font-mono text-xs tracking-[0.18em] text-brand uppercase">Flexibilität</p>
-          <h2 className="mt-3 text-3xl font-semibold tracking-tight">{financing.leasing.title}</h2>
+        <section className="rounded-2xl border bg-card p-8">
+          <h2 className=" text-3xl font-semibold tracking-tight">{financing.leasing.title}</h2>
           <p className="mt-4 text-muted-foreground">{financing.leasing.text}</p>
-          <div className="mt-6 flex flex-wrap gap-2">
-            {["Restwertleasing", "Kilometerleasing", "Leasingsonderzahlung optional"].map((t) => (
-              <span key={t} className="rounded-full border px-3 py-1 text-sm">
-                {t}
-              </span>
-            ))}
-          </div>
         </section>
       </div>
 

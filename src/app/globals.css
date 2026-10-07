@@ -147,13 +147,6 @@
   }
 }
 
-/* Feines Raster als Hintergrund, erinnert an technische Zeichnungen */
-@utility bg-grid {
-  background-image:
-    linear-gradient(to right, var(--border) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--border) 1px, transparent 1px);
-  background-size: 56px 56px;
-}
 
 @utility text-balance-tight {
   text-wrap: balance;
@@ -166,11 +159,3 @@
   }
 }
 
-@keyframes marquee {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
-}

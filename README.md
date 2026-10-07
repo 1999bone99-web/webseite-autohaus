@@ -15,7 +15,6 @@ Spezialist für BMW Halbjahres- und Jahreswagen seit 1988.
 | Karussell | embla-carousel (über shadcn) |
 | Suche | cmdk (über shadcn `Command`, `⌘K`) |
 | Kalender | react-day-picker, date-fns |
-| Animation | motion |
 | Hinweise | sonner |
 | Rechtstexte | react-markdown, remark-gfm, @tailwindcss/typography |
 | Dark Mode | next-themes |

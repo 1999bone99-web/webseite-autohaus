@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import Link from "next/link"
-import { CarIcon, CheckIcon, ClockIcon, PhoneIcon } from "lucide-react"
+import { CheckIcon, ClockIcon, PhoneIcon } from "lucide-react"
 
 import { WorkshopForm } from "@/components/forms/workshop-form"
 import { PageHeader } from "@/components/shared/page-header"
@@ -35,17 +35,16 @@ export default function WerkstattPage() {
       </PageHeader>
 
       <section className="container-page py-12">
-        <div className="flex flex-col gap-6 rounded-3xl bg-brand p-8 text-brand-foreground sm:flex-row sm:items-center sm:justify-between sm:p-10">
-          <div className="flex gap-4">
-            <CarIcon className="mt-1 size-6 shrink-0" />
+        <div className="flex flex-col gap-6 rounded-2xl border bg-card p-8 sm:flex-row sm:items-center sm:justify-between sm:p-10">
+          <div>
             <div>
               <h2 className="text-2xl font-semibold tracking-tight">Hol- und Bringservice</h2>
-              <p className="mt-1 opacity-85">
-                Wir holen Ihr Fahrzeug bequem zu Hause ab und bringen es nach dem Werkstatttermin gern wieder zurück.
+              <p className="mt-1 text-muted-foreground">
+                Wir holen Ihr Fahrzeug zu Hause ab und bringen es nach dem Werkstatttermin zurück.
               </p>
             </div>
           </div>
-          <Button asChild variant="secondary" size="lg" className="shrink-0 rounded-full">
+          <Button asChild size="lg" className="shrink-0 rounded-full">
             <Link href="#termin">Mit Abholung anfragen</Link>
           </Button>
         </div>
@@ -53,7 +52,7 @@ export default function WerkstattPage() {
 
       <section className="container-page grid gap-4 md:grid-cols-2">
         {workshopServices.map((s) => (
-          <article key={s.title} className="rounded-3xl border bg-card p-8">
+          <article key={s.title} className="rounded-2xl border bg-card p-8">
             <h2 className="text-xl font-semibold tracking-tight">{s.title}</h2>
             <p className="mt-2 text-muted-foreground">{s.text}</p>
             <ul className="mt-5 grid gap-2 sm:grid-cols-2">
@@ -66,7 +65,7 @@ export default function WerkstattPage() {
             </ul>
           </article>
         ))}
-        <article className="rounded-3xl border bg-card p-8 md:col-span-2">
+        <article className="rounded-2xl border bg-card p-8 md:col-span-2">
           <h2 className="text-xl font-semibold tracking-tight">Außerdem</h2>
           <div className="mt-4 flex flex-wrap gap-2">
             <Button asChild variant="outline" className="rounded-full">
@@ -106,7 +105,7 @@ export default function WerkstattPage() {
           </p>
         </aside>
 
-        <section className="rounded-3xl border bg-card p-6 sm:p-10 lg:col-span-8">
+        <section className="rounded-2xl border bg-card p-6 sm:p-10 lg:col-span-8">
           <h2 className="text-2xl font-semibold tracking-tight">Servicetermin anfragen</h2>
           <p className="mt-2 mb-8 text-muted-foreground">
             Egal ob Wartung, Reparatur, Karosserie- oder Lackarbeiten. Sie wählen einen Wunschtag, wir melden uns mit

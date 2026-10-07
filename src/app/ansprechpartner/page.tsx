@@ -8,12 +8,6 @@ import { site } from "@/lib/site"
 
 export const metadata: Metadata = { title: "Ansprechpartner" }
 
-function initials(name: string) {
-  return name
-    .split(" ")
-    .map((p) => p[0])
-    .join("")
-}
 
 export default function AnsprechpartnerPage() {
   return (
@@ -21,7 +15,7 @@ export default function AnsprechpartnerPage() {
       <PageHeader
         crumbs={[{ href: "/ueber-uns", label: "Unternehmen" }, { label: "Ansprechpartner" }]}
         title="Ihre Ansprechpartner"
-        description="Hier finden Sie den richtigen Ansprechpartner für Ihr Anliegen. Wir helfen gern weiter."
+        description="Hier finden Sie den richtigen Ansprechpartner für Ihr Anliegen."
       >
         <div className="rounded-2xl border bg-card p-5">
           <p className="font-mono text-xs text-muted-foreground uppercase">Zentrale</p>
@@ -35,14 +29,8 @@ export default function AnsprechpartnerPage() {
       </PageHeader>
       <div className="container-page grid gap-4 py-12 sm:grid-cols-2 lg:grid-cols-4">
         {team.map((p) => (
-          <article key={p.name} className="flex flex-col rounded-3xl border bg-card p-6">
-            <div
-              aria-hidden
-              className="grid size-16 place-items-center rounded-2xl bg-foreground font-mono text-lg font-medium text-background"
-            >
-              {initials(p.name)}
-            </div>
-            <h2 className="mt-6 text-lg font-semibold tracking-tight">{p.name}</h2>
+          <article key={p.name} className="flex flex-col rounded-2xl border bg-card p-6">
+            <h2 className="text-lg font-semibold tracking-tight">{p.name}</h2>
             <p className="text-sm text-muted-foreground">{p.role}</p>
             <div className="mt-6 grid gap-2">
               <Button asChild variant="outline" className="justify-start rounded-full">

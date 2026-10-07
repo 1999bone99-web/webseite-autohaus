@@ -27,7 +27,6 @@ export function PageHeader({
 }) {
   return (
     <section className="relative overflow-hidden border-b">
-      <div className="bg-grid pointer-events-none absolute inset-0 [mask-image:linear-gradient(to_bottom,black,transparent)] opacity-60" />
       <div className="container-page relative py-12 sm:py-16">
         <Breadcrumb>
           <BreadcrumbList>
@@ -59,7 +58,7 @@ export function PageHeader({
             {image && children && <div className="mt-6">{children}</div>}
           </div>
           {image ? (
-            <div className="relative aspect-[16/9] w-full shrink-0 overflow-hidden rounded-3xl border lg:w-[44%]">
+            <div className="relative aspect-[16/9] w-full shrink-0 overflow-hidden rounded-2xl border lg:w-[44%]">
               <Image src={image.src} alt={image.alt} fill priority sizes="(min-width: 1024px) 44vw, 100vw" className="object-cover" />
             </div>
           ) : (

@@ -24,7 +24,7 @@ export default function MietwagenPage() {
       />
       <div className="container-page grid gap-12 py-12 lg:grid-cols-12">
         <div className="lg:col-span-6">
-          <div className="relative aspect-[5/3] overflow-hidden rounded-3xl border">
+          <div className="relative aspect-[5/3] overflow-hidden rounded-2xl border">
             <Image src={rental.image} alt={`${rental.vehicle}, Beispielfahrzeug`} fill sizes="(min-width: 1024px) 50vw, 100vw" className="object-cover" />
           </div>
           <p className="mt-2 text-xs text-muted-foreground">Beispielfahrzeug</p>
@@ -53,7 +53,7 @@ export default function MietwagenPage() {
             </AccordionItem>
           </Accordion>
         </div>
-        <section className="rounded-3xl border bg-card p-6 sm:p-10 lg:col-span-6">
+        <section className="rounded-2xl border bg-card p-6 sm:p-10 lg:col-span-6">
           <h2 className="text-2xl font-semibold tracking-tight">Verfügbarkeit anfragen</h2>
           <p className="mt-2 mb-8 text-muted-foreground">Nennen Sie uns den gewünschten Zeitraum.</p>
           <Suspense>

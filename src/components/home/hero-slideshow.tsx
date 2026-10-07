@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils"
 /** Überblendende Kopfbilder. Bei reduzierter Bewegung bleibt das erste Bild stehen. */
 export function HeroSlideshow({
   images,
-  interval = 6000,
+  interval = 9000,
 }: {
   images: readonly { src: string; alt: string }[]
   interval?: number
@@ -32,8 +32,8 @@ export function HeroSlideshow({
           priority={i === 0}
           sizes="100vw"
           className={cn(
-            "object-cover transition-[opacity,transform] duration-[1600ms] ease-out",
-            i === active ? "scale-100 opacity-100" : "scale-[1.04] opacity-0"
+            "object-cover transition-opacity duration-[2500ms] ease-in-out",
+            i === active ? "opacity-100" : "opacity-0"
           )}
         />
       ))}

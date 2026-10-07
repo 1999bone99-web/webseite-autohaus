@@ -112,12 +112,12 @@ export const rims = [
 export const jobs = [
   {
     title: "Kfz-Mechatroniker (m/w/d)",
-    tasks: "Sie bearbeiten Reparaturaufträge präzise, termingerecht und qualitätsbewusst und halten mit der technischen Entwicklung der BMW-Modelle Schritt.",
+    tasks: "Sie arbeiten Reparaturaufträge sorgfältig und termingerecht ab und bleiben bei der Technik der aktuellen BMW-Modelle auf dem Laufenden.",
     profile: "Abgeschlossene Berufsausbildung und praktische Erfahrung im BMW-Bereich. Computergestützte Reparatur, Wartung und moderne Diagnosemethoden sind für Sie selbstverständlich.",
   },
   {
     title: "Kfz-Meister (m/w/d)",
-    tasks: "Sie bearbeiten Reparaturaufträge präzise, termingerecht und qualitätsbewusst und halten mit der technischen Entwicklung der BMW-Modelle Schritt.",
+    tasks: "Sie arbeiten Reparaturaufträge sorgfältig und termingerecht ab und bleiben bei der Technik der aktuellen BMW-Modelle auf dem Laufenden.",
     profile: "Entsprechende Qualifikation und praktische Erfahrung im BMW-Bereich. Sie bleiben bei neuen Entwicklungen auf dem Laufenden und lernen gern dazu.",
   },
 ]

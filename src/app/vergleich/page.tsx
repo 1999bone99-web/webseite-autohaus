@@ -11,7 +11,7 @@ export default function VergleichPage() {
       <PageHeader
         crumbs={[{ label: "Vergleich" }]}
         title="Fahrzeuge vergleichen"
-        description="Nebeneinander, Zeile für Zeile. Die jeweils besten Werte sind blau markiert."
+        description="Bis zu drei Fahrzeuge nebeneinander. Der beste Wert jeder Zeile ist blau markiert."
       />
       <div className="container-page py-12">
         <CompareView />

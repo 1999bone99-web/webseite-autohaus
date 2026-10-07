@@ -37,7 +37,7 @@ export function FavoritesView() {
           </EmptyMedia>
           <EmptyTitle>Noch nichts gemerkt</EmptyTitle>
           <EmptyDescription>
-            Tippen Sie auf das Herz an einem Fahrzeug. Die Merkliste bleibt in diesem Browser gespeichert, ohne Konto.
+            Tippen Sie auf das Herz an einem Fahrzeug, dann erscheint es hier.
           </EmptyDescription>
         </EmptyHeader>
         <EmptyContent>

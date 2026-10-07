@@ -29,15 +29,14 @@ export default function WunschfahrzeugPage() {
               "Farbe und Innenausstattung",
               "Ausstattung, auf die Sie nicht verzichten wollen",
               "Ihr Budget",
-            ].map((t, i) => (
-              <li key={t} className="flex gap-3">
-                <span className="font-mono text-xs text-brand">{String(i + 1).padStart(2, "0")}</span>
+            ].map((t) => (
+              <li key={t} className="flex gap-3 before:mt-2 before:size-1.5 before:shrink-0 before:rounded-full before:bg-foreground/40">
                 {t}
               </li>
             ))}
           </ul>
         </aside>
-        <section className="rounded-3xl border bg-card p-6 sm:p-10 lg:col-span-8">
+        <section className="rounded-2xl border bg-card p-6 sm:p-10 lg:col-span-8">
           <h2 className="text-2xl font-semibold tracking-tight">Suchauftrag</h2>
           <p className="mt-2 mb-8 text-muted-foreground">Unverbindlich und kostenlos.</p>
           <Suspense>

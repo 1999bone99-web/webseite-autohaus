@@ -14,7 +14,7 @@ export default function KarrierePage() {
       <PageHeader
         crumbs={[{ href: "/ueber-uns", label: "Unternehmen" }, { label: "Karriere" }]}
         title="Arbeiten bei Marhoffer"
-        description="Ein mittelständisches Unternehmen, seit über 30 Jahren auf BMW Halb- und Jahreswagen spezialisiert. Familiäre Atmosphäre, ein sympathisches Team und ein moderner Arbeitsplatz."
+        description="Wir sind seit über 30 Jahren auf BMW Halb- und Jahreswagen spezialisiert und suchen Verstärkung für unsere Werkstatt."
         image={{ src: "/images/service/werkstatt.jpg", alt: "Arbeit an der Bremsanlage in der Werkstatt" }}
       />
       <div className="container-page grid gap-12 py-12 lg:grid-cols-12">
@@ -43,8 +43,8 @@ export default function KarrierePage() {
                 <div>
                   <h3 className="font-mono text-xs tracking-wider text-muted-foreground uppercase">Was Sie erwartet</h3>
                   <p className="mt-1">
-                    Ein sympathisches Team, abwechslungsreiche Aufgaben an einem modernen Arbeitsplatz in einem
-                    dynamischen mittelständischen Unternehmen.
+                    Ein kleines Team in einem mittelständischen Betrieb, abwechslungsreiche Arbeit an aktuellen BMW-Modellen
+                    und ein moderner Arbeitsplatz.
                   </p>
                 </div>
               </AccordionContent>

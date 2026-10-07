@@ -28,12 +28,12 @@ export function VehicleGallery({ vehicle: v }: { vehicle: Vehicle }) {
   }, [api])
 
   if (v.images.length <= 1) {
-    return <VehiclePhoto vehicle={v} priority sizes="(min-width: 1024px) 66vw, 100vw" className="aspect-[4/3] rounded-3xl border" />
+    return <VehiclePhoto vehicle={v} priority sizes="(min-width: 1024px) 66vw, 100vw" className="aspect-[4/3] rounded-2xl border" />
   }
 
   return (
     <div>
-      <Carousel setApi={setApi} opts={{ loop: true }} className="overflow-hidden rounded-3xl border">
+      <Carousel setApi={setApi} opts={{ loop: true }} className="overflow-hidden rounded-2xl border">
         <CarouselContent className="ml-0">
           {v.images.map((_, i) => (
             <CarouselItem key={i} className="pl-0">

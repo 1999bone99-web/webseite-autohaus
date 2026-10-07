@@ -9,19 +9,16 @@ TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT
 mkdir -p "$TMP/details"
 
-# Listenseiten durchgehen, bis keine neuen Fahrzeuge mehr kommen
-page=0
+# Listenseiten durchgehen. Die Quelle zählt ab 1, die höchste Seite steht in der Blätterleiste.
+first="$(curl -fsS "$BASE/s:1,12,,-")"
+last="$(grep -oE 'fahrzeugbestand/s:[0-9]+,12' <<<"$first" | grep -oE '[0-9]+,' | tr -d , | sort -n | tail -1)"
 : > "$TMP/urls.txt"
-while :; do
+for page in $(seq 1 "${last:-1}"); do
   html="$(curl -fsS "$BASE/s:$page,12,,-")"
-  found="$(grep -oE 'https://www\.bmw-jw-marhoffer\.de/fahrzeuge/fahrzeugdetail/fahrzeug/[^"#]+' <<<"$html" | sort -u || true)"
-  new="$(comm -13 "$TMP/urls.txt" <(echo "$found") | grep . || true)"
-  [ -z "$new" ] && break
-  echo "$new" >> "$TMP/urls.txt"
-  sort -u -o "$TMP/urls.txt" "$TMP/urls.txt"
-  page=$((page + 1))
+  grep -oE 'https://www\.bmw-jw-marhoffer\.de/fahrzeuge/fahrzeugdetail/fahrzeug/[^"#]+' <<<"$html" >> "$TMP/urls.txt" || true
   sleep 1
 done
+sort -u -o "$TMP/urls.txt" "$TMP/urls.txt"
 echo "$(wc -l < "$TMP/urls.txt") Fahrzeuge gefunden"
 
 n=0
@@ -33,4 +30,4 @@ while read -r url; do
 done < "$TMP/urls.txt"
 
 python3 -I "$(dirname "$0")/convert.py" "$TMP/details" src/data
-echo "Fertig. Stand-Datum in src/lib/vehicles.ts (STOCK_DATE) anpassen."
+echo "Fertig."

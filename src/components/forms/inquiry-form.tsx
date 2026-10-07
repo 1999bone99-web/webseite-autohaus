@@ -8,6 +8,7 @@ import { Controller, useForm, useWatch } from "react-hook-form"
 import { toast } from "sonner"
 
 import { submitInquiry } from "@/app/actions"
+import { Honeypot } from "@/components/forms/honeypot"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import {
@@ -101,13 +102,14 @@ export function InquiryForm({
         form.reset()
         onDone?.()
       } else {
-        toast.error(res.error)
+        toast.error(res.error, { duration: 12_000 })
       }
     })
   )
 
   return (
     <form onSubmit={onSubmit} noValidate>
+      <Honeypot {...form.register("website")} />
       <FieldGroup>
         {pickVehicle && (
           <Controller

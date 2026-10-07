@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { notFound } from "next/navigation"
-import { CalendarIcon, ExternalLinkIcon, ImagesIcon, PhoneIcon } from "lucide-react"
+import { ArrowRightIcon, CalendarIcon, ExternalLinkIcon, ImagesIcon, PhoneIcon } from "lucide-react"
 
 import { PageHeader } from "@/components/shared/page-header"
 import { SectionHeading } from "@/components/shared/section-heading"
@@ -238,6 +238,12 @@ export default async function VehiclePage({ params }: PageProps<"/fahrzeuge/[id]
               <p className="mt-4 text-xs text-muted-foreground">
                 Verkauf: {site.hours.sales.map((h) => `${h.days} ${h.time}`).join(", ")}
               </p>
+              <Link
+                href={`/inzahlungnahme?fahrzeug=${v.id}`}
+                className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-brand underline-offset-4 hover:underline"
+              >
+                Ihr jetziges Auto in Zahlung geben <ArrowRightIcon className="size-3.5" />
+              </Link>
               {(v.photosOnRequest || v.images.length === 0) && (
                 <a
                   href={`mailto:${contact.email}?subject=${encodeURIComponent(`Fotos zu ${v.name}, Inserat ${v.adId}`)}`}

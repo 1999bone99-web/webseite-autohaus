@@ -463,7 +463,7 @@
    "name": "Schwarz",
    "hex": "#15171b"
   },
-  "consumption": "76,0 l/100km",
+  "consumption": null,
   "co2": 199,
   "co2Class": null,
   "highlights": [
@@ -501,7 +501,7 @@
    "name": "Grau",
    "hex": "#6f747a"
   },
-  "consumption": "76,0 l/100km",
+  "consumption": null,
   "co2": 199,
   "co2Class": null,
   "highlights": [
@@ -671,7 +671,7 @@
    "name": "Weiß",
    "hex": "#eceef0"
   },
-  "consumption": "76,0 l/100km",
+  "consumption": null,
   "co2": 199,
   "co2Class": null,
   "highlights": [
@@ -755,7 +755,7 @@
    "name": "Schwarz",
    "hex": "#15171b"
   },
-  "consumption": "76,0 l/100km",
+  "consumption": null,
   "co2": 199,
   "co2Class": null,
   "highlights": [
@@ -1439,7 +1439,7 @@
    "name": "Blau",
    "hex": "#1f3f7a"
   },
-  "consumption": "76,0 l/100km",
+  "consumption": null,
   "co2": 199,
   "co2Class": null,
   "highlights": [
@@ -3223,7 +3223,7 @@
    "name": "Schwarz",
    "hex": "#15171b"
   },
-  "consumption": "34,0 l/100km",
+  "consumption": null,
   "co2": 34,
   "co2Class": "B",
   "highlights": [
@@ -3380,7 +3380,7 @@
    "name": "Weiß",
    "hex": "#eceef0"
   },
-  "consumption": "34,0 l/100km",
+  "consumption": null,
   "co2": 34,
   "co2Class": "B",
   "highlights": [
@@ -3494,7 +3494,7 @@
    "name": "Grün",
    "hex": "#2f4a3a"
   },
-  "consumption": "34,0 l/100km",
+  "consumption": null,
   "co2": 34,
   "co2Class": "B",
   "highlights": [
@@ -3532,7 +3532,7 @@
    "name": "Rot",
    "hex": "#7a1a22"
   },
-  "consumption": "34,0 l/100km",
+  "consumption": null,
   "co2": 34,
   "co2Class": "B",
   "highlights": [
@@ -3891,7 +3891,7 @@
    "name": "Grau",
    "hex": "#6f747a"
   },
-  "consumption": "76,0 l/100km",
+  "consumption": null,
   "co2": 199,
   "co2Class": null,
   "highlights": [

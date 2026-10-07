@@ -8,6 +8,7 @@ import { SiteHeader } from "@/components/layout/site-header"
 import { Toaster } from "@/components/ui/sonner"
 import { TooltipProvider } from "@/components/ui/tooltip"
 import { site } from "@/lib/site"
+import { maxSaving } from "@/lib/vehicles"
 import { GarageHydrator } from "@/stores/garage-hydrator"
 
 import "./globals.css"
@@ -20,7 +21,7 @@ export const metadata: Metadata = {
     default: "Marhoffer · BMW Halbjahres- und Jahreswagen in Mühlhausen",
     template: "%s · Marhoffer",
   },
-  description: `BMW Halb- und Jahreswagen mit Wunschausstattung. Bis zu ${site.maxSavingPercent} % Preisvorteil zur ehemaligen UPE. Seit ${site.foundedYear} in ${site.address.city} (${site.address.region}). Mit eigener Werkstatt.`,
+  description: `BMW Halb- und Jahreswagen mit Wunschausstattung. Bis zu ${maxSaving} % unter Listenneupreis. Seit ${site.foundedYear} in ${site.address.city} (${site.address.region}). Mit eigener Werkstatt.`,
 }
 
 export const viewport: Viewport = {
@@ -42,8 +43,16 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <NuqsAdapter>
             <TooltipProvider delayDuration={200}>
               <GarageHydrator />
+              <a
+                href="#inhalt"
+                className="sr-only rounded-full bg-brand px-4 py-2 text-sm font-medium text-brand-foreground focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100]"
+              >
+                Zum Inhalt springen
+              </a>
               <SiteHeader />
-              <main className="flex-1">{children}</main>
+              <main id="inhalt" tabIndex={-1} className="flex-1 scroll-mt-20 outline-none">
+                {children}
+              </main>
               <SiteFooter />
               <Toaster position="bottom-center" />
             </TooltipProvider>

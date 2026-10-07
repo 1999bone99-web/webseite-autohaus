@@ -1,6 +1,6 @@
 """Wandelt die geladenen Detailseiten von www.bmw-jw-marhoffer.de in JSON für die Webseite um.
 Aufruf über scripts/bestand/fetch.sh"""
-import sys, re, html, json, os, collections
+import sys, re, html, json, os, collections, datetime
 
 src, outdir = sys.argv[1], sys.argv[2]
 idx = dict(l.split(' ', 1) for l in open(os.path.join(src, 'index.txt')).read().splitlines())
@@ -73,7 +73,7 @@ def headline(make, model, name, title):
         return head, t[m.end():].strip()
     return name, t
 
-vehicles, equipment, skipped = [], {}, []
+vehicles, equipment, skipped, implausible = [], {}, [], []
 for n, url in sorted(idx.items(), key=lambda x: int(x[0])):
     s = open(os.path.join(src, f'{n}.html'), encoding='utf-8').read()
     kwm = re.search(r'<meta name="keywords" content="([^"]*)"', s)
@@ -117,6 +117,11 @@ for n, url in sorted(idx.items(), key=lambda x: int(x[0])):
     cons = co2 = co2cls = None
     if 'Energieverbrauch (kombiniert):' in lines:
         cons = after('Energieverbrauch (kombiniert):')
+        # Offensichtliche Tippfehler im Inserat (z. B. "76,0 l/100km" bei einem X5 30d) nicht anzeigen
+        lm = re.match(r'([\d,.]+)\s*l/100', cons or '')
+        if lm and float(lm.group(1).replace(',', '.')) > 25:
+            implausible.append(f'{title}: {cons}')
+            cons = None
     if 'CO₂-Emissionen (kombiniert):' in lines:
         co2 = num(after('CO₂-Emissionen (kombiniert):'))
     if 'CO₂-Klasse:' in lines:
@@ -182,10 +187,20 @@ for n, url in sorted(idx.items(), key=lambda x: int(x[0])):
     ))
     equipment[vid] = {'groups': [{'group': g, 'items': it} for g, it in groups.items() if it], 'special': special}
 
+# Sicherung für den automatischen Abgleich: Liefert die Quelle plötzlich viel weniger Fahrzeuge
+# (Seite nicht erreichbar, Layout geändert), bleibt der bisherige Bestand stehen.
+old_path = os.path.join(outdir, 'vehicles.json')
+if os.path.exists(old_path):
+    old_count = len(json.load(open(old_path)))
+    if len(vehicles) < max(5, old_count // 2):
+        sys.exit(f'Abbruch: nur {len(vehicles)} Fahrzeuge gefunden, bisher {old_count}. Bestand bleibt unverändert.')
+
 os.makedirs(outdir, exist_ok=True)
 json.dump(vehicles, open(os.path.join(outdir, 'vehicles.json'), 'w'), ensure_ascii=False, indent=1)
 json.dump(equipment, open(os.path.join(outdir, 'equipment.json'), 'w'), ensure_ascii=False, separators=(',', ':'))
+json.dump({'stockDate': datetime.date.today().isoformat()}, open(os.path.join(outdir, 'stock-meta.json'), 'w'))
 print(len(vehicles), 'Fahrzeuge, übersprungen:', skipped)
 print('mit Fotos', sum(1 for v in vehicles if v['images']), 'mit UPE', sum(1 for v in vehicles if v['msrp']))
 print('ohne km/preis/ez', [v['id'] for v in vehicles if not (v['mileage'] is not None and v['price'] and v['firstRegistration'])])
+print('Verbrauch nicht übernommen (unplausibel):', implausible)
 print('ids unique', len({v['id'] for v in vehicles}) == len(vehicles))

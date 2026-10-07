@@ -46,6 +46,7 @@ export const navigation: NavGroup[] = [
       { href: "/wunschfahrzeug", label: "Wunschfahrzeug", description: "Nicht dabei? Wir suchen für Sie" },
       { href: "/probefahrt", label: "Probefahrt", description: "Termin für Ihr Wunschfahrzeug" },
       { href: "/finanzierung", label: "Finanzierung & Leasing", description: "Zielfinanzierung und Leasing" },
+      { href: "/inzahlungnahme", label: "Inzahlungnahme", description: "Ihr bisheriges Fahrzeug abgeben" },
     ],
   },
   {

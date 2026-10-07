@@ -99,7 +99,7 @@ export default function WerkstattPage() {
           </div>
           <p className="text-sm text-muted-foreground">
             Ansprechpartner Werkstatt: Erdinc Felek,{" "}
-            <a href={site.phone.workshop.href} className="text-brand hover:underline">
+            <a href={site.phone.workshop.href} className="font-medium text-brand underline underline-offset-4">
               {site.phone.workshop.display}
             </a>
           </p>

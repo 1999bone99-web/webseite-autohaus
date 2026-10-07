@@ -10,6 +10,7 @@ import { Controller, useForm } from "react-hook-form"
 import { toast } from "sonner"
 
 import { submitWorkshopRequest } from "@/app/actions"
+import { Honeypot } from "@/components/forms/honeypot"
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -52,12 +53,13 @@ export function WorkshopForm() {
           description: `Wir bestätigen den ${format(values.date, "d. MMMM", { locale: de })} oder schlagen eine Alternative vor.`,
         })
         form.reset()
-      } else toast.error(res.error)
+      } else toast.error(res.error, { duration: 12_000 })
     })
   )
 
   return (
     <form onSubmit={onSubmit} noValidate>
+      <Honeypot {...form.register("website")} />
       <FieldGroup>
         <div className="grid gap-6 sm:grid-cols-2">
           <Controller

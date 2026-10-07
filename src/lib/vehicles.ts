@@ -5,6 +5,8 @@
  * (Fotos und Inserate laufen dort über webauto.de).
  */
 import data from "@/data/vehicles.json"
+import stockMeta from "@/data/stock-meta.json"
+import { site } from "@/lib/site"
 
 export type BodyType = "limousine" | "touring" | "suv" | "coupe"
 export type Category = "Neuwagen" | "Halbjahreswagen" | "Jahreswagen" | "Gebrauchtwagen"
@@ -47,7 +49,8 @@ export type Vehicle = {
 
 export const vehicles = data as Vehicle[]
 
-export const STOCK_DATE = "07.10.2026"
+/** Abrufdatum des Bestands, schreibt scripts/bestand/convert.py */
+export const STOCK_DATE = stockMeta.stockDate.split("-").reverse().join(".")
 
 export const categories: { name: Category; description: string }[] = [
   {
@@ -105,6 +108,15 @@ export function savingPercent(v: Pick<Vehicle, "price" | "msrp">) {
   if (!v.msrp) return null
   return Math.round((1 - v.price / v.msrp) * 100)
 }
+
+/**
+ * Für „bis zu … % unter Neupreis“: der höchste Abstand im aktuellen Bestand, abgerundet,
+ * höchstens so viel, wie das Autohaus selbst angibt. So bleibt die Aussage nach jedem Abgleich wahr.
+ */
+export const maxSaving = Math.min(
+  site.maxSavingPercent,
+  Math.floor(Math.max(0, ...vehicles.map((v) => (v.msrp ? (1 - v.price / v.msrp) * 100 : 0))))
+)
 
 export function kwToPs(kw: number) {
   return Math.round(kw * 1.35962)

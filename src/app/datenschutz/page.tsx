@@ -10,7 +10,7 @@ export default function Page() {
     <LegalPage
       title="Datenschutzerklärung"
       content={content}
-      notice="Diese Erklärung stammt von der bisherigen Webseite. Sie beschreibt dort eingesetzte Dienste (u. a. Hosting bei webauto.de, Google Analytics, AddThis), die auf dieser Seite nicht verwendet werden. Vor dem Livegang muss sie an die neue Seite angepasst werden."
+      notice="Entwurf, angepasst an die Dienste dieser Seite (Hosting bei Vercel, Mailversand über Resend, Fahrzeugfotos von webauto.de). Vor dem Livegang von einer fachkundigen Person prüfen lassen und die Verträge zur Auftragsverarbeitung mit Vercel und Resend abschließen."
     />
   )
 }

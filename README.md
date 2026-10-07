@@ -43,7 +43,7 @@ Kernversprechen des Hauses (bis zu 45 % unter Neupreis) überall sichtbar im Mit
 
 | Bereich | Seiten |
 | --- | --- |
-| Fahrzeuge | `/fahrzeuge`, `/fahrzeuge/[id]`, `/wunschfahrzeug`, `/probefahrt`, `/finanzierung`, `/vergleich`, `/merkliste` |
+| Fahrzeuge | `/fahrzeuge`, `/fahrzeuge/[id]`, `/wunschfahrzeug`, `/probefahrt`, `/finanzierung`, `/inzahlungnahme`, `/vergleich`, `/merkliste` |
 | Service | `/werkstatt` (inkl. Servicetermin `#termin`), `/glasreparatur`, `/komplettraeder`, `/mietwagen` |
 | Unternehmen | `/ueber-uns`, `/ansprechpartner`, `/karriere`, Kundenstimmen (Link zu mobile.de) |
 | Kontakt | `/kontakt` (inkl. Anfahrt `#anfahrt`, Rückruf über `?anliegen=rueckruf`) |
@@ -58,44 +58,76 @@ Texte, Ansprechpartner, Kompletträder, Mietwagen und Rechtstexte stammen von ww
 (Stand 07.10.2026):
 
 - `src/lib/content.ts` – Team, Werkstattleistungen, Finanzierung, Mietwagen, Kompletträder, Stellen
-- `src/content/rechtliches/*.md` – Rechtstexte, wörtlich übernommen (inkl. Tippfehler)
+- `src/content/rechtliches/*.md` – Rechtstexte. Impressum, AGB und Nutzungsbestimmungen wörtlich übernommen,
+  Datenschutz und Barrierefreiheit für die neue Seite überarbeitet (Entwurf)
 - `src/content/mietbedingungen.md`
 - `public/images/…` – Bilder von der bisherigen Seite
 
 ## Fahrzeugbestand
 
-Der Bestand stammt von www.bmw-jw-marhoffer.de (Stand 07.10.2026, 94 Fahrzeuge) und liegt in
-`src/data/vehicles.json` und `src/data/equipment.json`. Fotos werden direkt vom Händlersystem
-(`www.webauto.de/imgcars/…`) geladen. Bei Fahrzeugen ohne Fotos zeigt die Seite eine gezeichnete Silhouette.
+Der Bestand stammt von www.bmw-jw-marhoffer.de und liegt in `src/data/vehicles.json`,
+`src/data/equipment.json` und `src/data/stock-meta.json` (Abrufdatum, wird als „Stand“ angezeigt).
+Fotos werden direkt vom Händlersystem (`www.webauto.de/imgcars/…`) geladen. Ohne Fotos zeigt die Seite
+eine ruhige Fläche mit Baureihe und Lackfarbe.
 
-Neu einlesen:
+**Automatischer Abgleich:** Die GitHub Action `.github/workflows/bestand.yml` lädt den Bestand jeden Morgen
+um 04:17 UTC neu und committet Änderungen auf `main`. Vercel baut danach automatisch. Von Hand starten:
+GitHub → Actions → „Bestand abgleichen“ → Run workflow. Lokal:
 
 ```bash
 bash scripts/bestand/fetch.sh
 ```
 
-Danach `STOCK_DATE` in `src/lib/vehicles.ts` anpassen, committen, pushen.
+Sicherungen im Konverter (`scripts/bestand/convert.py`):
+- Liefert die Quelle weniger als halb so viele Fahrzeuge wie bisher (Seite down, Layout geändert),
+  bricht der Abgleich ab und der alte Bestand bleibt stehen. Die Action schlägt dann fehl und GitHub
+  schickt eine Mail.
+- Verbrauchsangaben über 25 l/100 km gelten als Tippfehler und werden nicht angezeigt
+  (betrifft derzeit X5 30d mit 76,0 und XM 50e mit 34,0 l/100 km). Besser im Händlersystem korrigieren.
+- „Bis zu … % unter Neupreis“ wird aus dem Bestand berechnet und ist auf `site.maxSavingPercent` (45) begrenzt.
 
-Hinweise zu den Quelldaten:
-- Den „Ersparnis“-Balken gibt es nur, wenn das Inserat einen Listenneupreis nennt (77 von 94).
-- Einige Verbrauchsangaben in den Inseraten sind offensichtlich falsch (z. B. 76,0 l/100 km beim X5 30d,
-  34,0 l/100 km beim XM 50e). Sie werden unverändert übernommen und sollten im Händlersystem korrigiert werden.
+## Formulare und Mailversand
+
+Alle Formulare (Anfrage, Probefahrt, Rückruf, Suchauftrag, Finanzierung, Werkstatttermin, Inzahlungnahme)
+laufen über Server Actions in `src/app/actions.ts` und werden per [Resend](https://resend.com) als E-Mail
+verschickt (`src/lib/mail.ts`). Die Antwortadresse ist die des Kunden, „Antworten“ im Mailprogramm geht also
+direkt an ihn. Ein unsichtbares Feld hält einfache Spam-Bots ab.
+
+In Vercel unter Settings → Environment Variables setzen:
+
+| Variable | Wert |
+| --- | --- |
+| `RESEND_API_KEY` | API-Schlüssel aus dem Resend-Konto |
+| `MAIL_FROM` | Absender auf einer bei Resend verifizierten Domain, z. B. `Webseite <anfrage@bmw-jw-marhoffer.de>` |
+| `MAIL_TO` | optional, Standard `info@bmw-jw-marhoffer.de` |
+
+Ohne diese Variablen schreibt die Seite lokal den Mailinhalt ins Terminal. In der Produktion zeigt das
+Formular dann eine Fehlermeldung mit Telefonnummer und E-Mail-Adresse, damit keine Anfrage verloren geht.
 
 ## Vor dem Livegang offen
 
-- **Datenschutzerklärung anpassen.** Sie beschreibt die alte Seite (webauto.de-Hosting, Google Analytics,
-  AdWords, AddThis). Für die neue Seite fehlen u. a. Hosting (z. B. Vercel) und das Laden der Fahrzeugfotos
-  von webauto.de. Auf der Seite steht ein entsprechender Hinweis.
-- **Barrierefreiheitserklärung neu bewerten** (bezieht sich auf die alte Seite, ebenfalls mit Hinweis).
+- **Resend einrichten** (Konto, Domain verifizieren, Variablen in Vercel, siehe oben) und einmal jedes
+  Formular testen.
+- **Datenschutz und Barrierefreiheit** sind überarbeitete Entwürfe. Von einer fachkundigen Person prüfen lassen,
+  Auftragsverarbeitungsverträge mit Vercel und Resend abschließen. Klären, ob das Barrierefreiheitsstärkungsgesetz
+  greift und welche Stelle dann in der Erklärung genannt werden muss. Die alte Erklärung nannte eine Stelle in
+  Rheinland-Pfalz, Mühlhausen liegt in Baden-Württemberg.
+- **Inzahlungnahme**: Die alte Seite erwähnt sie nicht. Bestätigen, dass das Autohaus Fahrzeuge in Zahlung nimmt,
+  sonst Seite und Menüpunkt entfernen.
+- **„unter Neupreis“**: Die Fußnote im Hero erklärt den Bezug. Ob das wettbewerbsrechtlich reicht, prüfen lassen.
+- **Fotos vom Autohaus und vom Team** fehlen. Porträts für die Ansprechpartner und ein Foto vom Hof würden viel
+  Vertrauen bringen.
+- **Bewertungen**: Die Note von mobile.de könnte auf Startseite und Fahrzeugseiten stehen. Dafür die aktuelle Note
+  und Anzahl liefern oder eine Schnittstelle klären.
+- **WhatsApp** als Kontaktweg nur, wenn jemand im Haus das zuverlässig beantwortet. Nummer fehlt.
 - Impressum: Der Absatz „Internetseite realisiert von meinautohaus.de“ wurde weggelassen.
-- **Formulare** validieren, senden aber noch nichts (`src/app/actions.ts`). Mailversand oder CRM anbinden.
-- Bestand automatisch aktuell halten statt Momentaufnahme.
 - Aktualität prüfen: Mietwagen-Angebot (Inserat von 2022), Kompletträder (Mai 2025), Frau Izzo steht auf der
   Finanzierungsseite, aber nicht bei den Ansprechpartnern.
 - Bildrechte prüfen: Werkstatt-, Glas- und Mietwagenfoto sehen nach Stockfotos aus.
 - Logo: Die Bildmarke ist aus dem PNG der alten Seite als SVG nachgezeichnet (`src/components/layout/logo.tsx`).
   Für eine exakte Version die Originaldatei beim Autohaus anfragen.
 - Markenrecht: kein BMW-Logo verwendet. Ob und wie das Autohaus BMW-Markenzeichen nutzen darf, klären.
+- Test auf echten Geräten (iPhone, Android) und eine Performance-Messung auf der Live-Domain.
 
 ## shadcn-Komponenten
 

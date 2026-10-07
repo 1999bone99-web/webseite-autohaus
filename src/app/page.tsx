@@ -7,7 +7,7 @@ import { QuickSearch } from "@/components/home/quick-search"
 import { Button } from "@/components/ui/button"
 import { serializeInventory } from "@/lib/search-params"
 import { site } from "@/lib/site"
-import { savingPercent, stockCategories, vehicles } from "@/lib/vehicles"
+import { maxSaving, savingPercent, stockCategories, vehicles } from "@/lib/vehicles"
 
 const featured = [...vehicles]
   .filter((v) => v.images.length > 0)
@@ -64,7 +64,7 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
         <div className="container-page relative pt-32 pb-10 lg:pb-16">
           <h1 className="text-balance-tight text-sheen max-w-3xl text-[2.5rem] leading-[1.05] font-semibold sm:text-6xl">
-            BMW mit Wunschausstattung, bis zu {site.maxSavingPercent} % unter Neupreis.
+            BMW mit Wunschausstattung, bis zu {maxSaving} % unter Neupreis.*
           </h1>
           <p className="mt-5 max-w-xl text-pretty text-white/80 sm:text-lg">
             Seit {site.foundedYear} in Mühlhausen. Derzeit {vehicles.length} Fahrzeuge im Bestand.
@@ -72,6 +72,7 @@ export default function HomePage() {
           <div className="mt-8 max-w-4xl text-foreground">
             <QuickSearch />
           </div>
+          <p className="mt-4 text-xs text-white/60">* Bezogen auf den Listenneupreis, den das Inserat des jeweiligen Fahrzeugs nennt.</p>
         </div>
       </section>
 

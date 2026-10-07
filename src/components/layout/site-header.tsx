@@ -33,7 +33,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet"
 import { navigation, site } from "@/lib/site"
-import { stockCategories, vehicles } from "@/lib/vehicles"
+import { maxSaving, stockCategories, vehicles } from "@/lib/vehicles"
 import { cn } from "@/lib/utils"
 import { useGarage } from "@/stores/garage"
 
@@ -80,7 +80,7 @@ export function SiteHeader() {
                                 {stockCategories.map((c) => `${vehicles.filter((v) => v.category === c.name).length} ${c.name}`).join(" · ")}
                               </span>
                             </span>
-                            <span className="font-mono text-xs text-brand">bis −{site.maxSavingPercent} %</span>
+                            <span className="font-mono text-xs text-brand">bis −{maxSaving} %</span>
                           </Link>
                         </NavigationMenuLink>
                       </li>

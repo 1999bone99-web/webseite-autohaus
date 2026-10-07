@@ -10,7 +10,7 @@ export default function Page() {
     <LegalPage
       title="Barrierefreiheitserklärung"
       content={content}
-      notice="Diese Erklärung stammt von der bisherigen Webseite und bezieht sich auf deren Aufbau. Für die neue Seite muss der Stand der Barrierefreiheit neu bewertet werden."
+      notice="Entwurf für die neue Seite, auf Basis einer automatisierten Prüfung (axe-core, alle Seiten) und eines Tastaturtests. Vor dem Livegang klären, ob das Barrierefreiheitsstärkungsgesetz greift und welche Durchsetzungs- oder Schlichtungsstelle genannt werden muss."
     />
   )
 }

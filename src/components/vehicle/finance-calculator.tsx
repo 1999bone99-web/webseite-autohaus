@@ -57,7 +57,7 @@ export function FinanceCalculator({ price }: { price: number }) {
             className="w-full"
           >
             {TERMS.map((t) => (
-              <ToggleGroupItem key={t} value={String(t)} className="flex-1 font-mono">
+              <ToggleGroupItem key={t} value={String(t)} className="min-w-0 flex-1 px-1 font-mono text-xs sm:text-sm">
                 {t} M.
               </ToggleGroupItem>
             ))}

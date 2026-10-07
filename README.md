@@ -31,7 +31,7 @@ npm run lint
 Die Zielgruppe sucht einen gut ausgestatteten BMW und will beim Preis klug sein. Darum steht das
 Kernversprechen des Hauses (bis zu 45 % unter Neupreis) überall sichtbar im Mittelpunkt:
 
-- **Ersparnis-Balken** an jedem Fahrzeug: Abstand zur damaligen UPE statt nur ein Preis.
+- **Ersparnis-Balken** an jedem Fahrzeug: Abstand zum Listenneupreis statt nur ein Preis.
 - **Datenblatt-Optik**: technische Werte (EZ, km, PS) in Geist Mono, viel Weißraum, ein einziger blauer Akzent.
 - **Schnellsuche im Hero** mit Live-Trefferzahl, **⌘K-Suche** über Bestand und alle Seiten.
 - **Vergleich** bis 3 Fahrzeuge mit hervorgehobenen Bestwerten, **Merkliste** ohne Konto.

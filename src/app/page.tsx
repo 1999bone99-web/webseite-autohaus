@@ -64,7 +64,7 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
         <div className="container-page relative pt-32 pb-10 lg:pb-16">
           <h1 className="text-balance-tight max-w-3xl text-[2.5rem] leading-[1.05] font-semibold sm:text-6xl">
-            BMW mit Wunschausstattung, bis zu {site.maxSavingPercent} % unter dem damaligen Neupreis.
+            BMW mit Wunschausstattung, bis zu {site.maxSavingPercent} % unter Neupreis.
           </h1>
           <p className="mt-5 max-w-xl text-pretty text-white/80 sm:text-lg">
             Seit {site.foundedYear} in Mühlhausen. Derzeit {vehicles.length} Fahrzeuge im Bestand.

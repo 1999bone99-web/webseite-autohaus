@@ -30,7 +30,7 @@ export default function FahrzeugePage() {
       <PageHeader
         crumbs={[{ label: "Fahrzeuge" }]}
         title="Unser Bestand"
-        description={`Jedes Fahrzeug zeigt, wie weit es unter dem damaligen Neupreis liegt. Bis zu ${site.maxSavingPercent} % sind drin.`}
+        description="Bei den meisten Fahrzeugen sehen Sie direkt, wie weit der Preis unter dem Listenneupreis liegt. Alle Angaben aus unseren aktuellen Inseraten."
       />
       <Suspense fallback={<InventorySkeleton />}>
         <Inventory />

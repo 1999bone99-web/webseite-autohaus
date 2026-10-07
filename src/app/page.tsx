@@ -14,17 +14,22 @@ import { Reveal } from "@/components/shared/reveal"
 import { SectionHeading } from "@/components/shared/section-heading"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { VehiclePhoto } from "@/components/vehicle/vehicle-photo"
 import { VehicleVisual } from "@/components/vehicle/vehicle-visual"
 import { formatKm, formatPrice, formatRegistration } from "@/lib/format"
 import { site } from "@/lib/site"
-import { categories, savingPercent, vehicles } from "@/lib/vehicles"
+import { kwToPs, savingPercent, stockCategories, vehicles } from "@/lib/vehicles"
 
-const hero = vehicles[1]
+const newestFirst = [...vehicles].sort(
+  (a, b) =>
+    Number(b.images.length > 0) - Number(a.images.length > 0) ||
+    b.firstRegistration.localeCompare(a.firstRegistration)
+)
+const hero =
+  newestFirst.find((v) => v.images.length > 0 && v.msrp && v.category === "Jahreswagen") ?? newestFirst[0]
 
 export default function HomePage() {
-  const featured = [...vehicles].sort((a, b) =>
-    b.firstRegistration.localeCompare(a.firstRegistration)
-  )
+  const featured = newestFirst.filter((v) => v.id !== hero.id)
 
   return (
     <>
@@ -49,8 +54,8 @@ export default function HomePage() {
                 </span>
               </h1>
               <p className="mt-6 max-w-xl text-pretty text-lg text-muted-foreground">
-                Seit {site.foundedYear} verkaufen wir Halbjahres- und Jahreswagen, die schon beim ersten
-                Besitzer gut ausgestattet waren. Ausgeliefert in Deutschland und ins Ausland, gewartet in
+                Seit {site.foundedYear} verkaufen wir junge BMW, die schon beim ersten Besitzer
+                hervorragend ausgestattet waren. Vom 5er bis zum X7, vom Diesel bis zum iX. Ausgeliefert in Deutschland und ins Ausland, gewartet in
                 unserer eigenen Werkstatt.
               </p>
             </Reveal>
@@ -64,17 +69,17 @@ export default function HomePage() {
               href={`/fahrzeuge/${hero.id}`}
               className="group relative block overflow-hidden rounded-3xl border"
             >
-              <VehicleVisual
-                body={hero.body}
-                color={hero.color.hex}
-                label={`${hero.model} in ${hero.color.name}`}
+              <VehiclePhoto
+                vehicle={hero}
+                priority
+                sizes="(min-width: 1024px) 50vw, 100vw"
                 className="aspect-[5/4] transition-transform duration-700 group-hover:scale-[1.02] sm:aspect-[4/3]"
               />
-              <div className="absolute inset-x-0 top-0 flex items-start justify-between p-5">
+              <div className="absolute inset-x-0 top-0 flex items-start justify-between bg-gradient-to-b from-background/70 to-transparent p-5">
                 <div>
                   <Badge className="rounded-full">{hero.category}</Badge>
-                  <p className="mt-3 text-xl font-semibold tracking-tight">{hero.model}</p>
-                  <p className="text-sm text-muted-foreground">{hero.color.name}</p>
+                  <p className="mt-3 text-xl font-semibold tracking-tight [text-shadow:0_1px_12px_var(--background)]">{hero.name}</p>
+                  <p className="text-sm text-muted-foreground [text-shadow:0_1px_12px_var(--background)]">{hero.color.name}</p>
                 </div>
                 <span className="grid size-10 place-items-center rounded-full bg-background/80 backdrop-blur transition group-hover:bg-foreground group-hover:text-background">
                   <ArrowUpRightIcon className="size-4" />
@@ -83,7 +88,9 @@ export default function HomePage() {
               <dl className="absolute inset-x-3 bottom-3 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border bg-border font-mono text-xs sm:grid-cols-4">
                 {[
                   ["Preis", formatPrice(hero.price)],
-                  ["Ersparnis", `−${savingPercent(hero)} %`],
+                  savingPercent(hero) != null
+                    ? ["Ersparnis", `−${savingPercent(hero)} %`]
+                    : ["Leistung", `${kwToPs(hero.powerKw)} PS`],
                   ["EZ", formatRegistration(hero.firstRegistration)],
                   ["km", formatKm(hero.mileage)],
                 ].map(([k, v]) => (
@@ -134,15 +141,15 @@ export default function HomePage() {
       {/* Kategorien */}
       <section className="border-y bg-muted/40 py-20 lg:py-28">
         <div className="container-page">
-          <SectionHeading eyebrow="Kurz erklärt" title="Halbjahres-, Jahres-, Gebrauchtwagen. Was ist der Unterschied?">
-            Die Begriffe klingen ähnlich, bedeuten aber beim Preis und beim Zustand einiges.
+          <SectionHeading eyebrow="Kurz erklärt" title="Jahreswagen oder Gebrauchtwagen?">
+            Die Begriffe klingen ähnlich, bedeuten aber beim Preis und beim Zustand einiges. Der Durchschnitt zeigt den
+            Abstand zum Listenneupreis, soweit das Inserat ihn nennt.
           </SectionHeading>
-          <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {categories.map((c, i) => {
+          <div className="mt-12 grid gap-4 sm:grid-cols-2">
+            {stockCategories.map((c, i) => {
               const items = vehicles.filter((v) => v.category === c.name)
-              const avg = items.length
-                ? Math.round(items.reduce((s, v) => s + savingPercent(v), 0) / items.length)
-                : 0
+              const savings = items.map(savingPercent).filter((x): x is number => x != null)
+              const avg = savings.length ? Math.round(savings.reduce((s, x) => s + x, 0) / savings.length) : 0
               return (
                 <Reveal key={c.name} delay={i * 0.06}>
                   <Link

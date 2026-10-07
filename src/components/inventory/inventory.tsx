@@ -33,7 +33,7 @@ import {
 import { VehicleCard } from "@/components/vehicle/vehicle-card"
 import { formatKm, formatPrice } from "@/lib/format"
 import { filterVehicles, sortOptions, type SortOption } from "@/lib/search-params"
-import { bodyLabels, vehicles, type BodyType } from "@/lib/vehicles"
+import { bodyLabels, STOCK_DATE, vehicles, type BodyType } from "@/lib/vehicles"
 import Link from "next/link"
 
 const sortLabels: Record<SortOption, string> = {
@@ -52,7 +52,7 @@ export function Inventory() {
 
   const chips: { label: string; clear: () => void }[] = [
     ...f.kategorie.map((x) => ({ label: x, clear: () => setF({ kategorie: f.kategorie.filter((y) => y !== x) }) })),
-    ...f.baureihe.map((x) => ({ label: `BMW ${x}`, clear: () => setF({ baureihe: f.baureihe.filter((y) => y !== x) }) })),
+    ...f.baureihe.map((x) => ({ label: x, clear: () => setF({ baureihe: f.baureihe.filter((y) => y !== x) }) })),
     ...f.kraftstoff.map((x) => ({ label: x, clear: () => setF({ kraftstoff: f.kraftstoff.filter((y) => y !== x) }) })),
     ...f.karosserie.map((x) => ({
       label: bodyLabels[x as BodyType] ?? x,
@@ -158,7 +158,7 @@ export function Inventory() {
         )}
 
         <p className="mt-10 text-xs text-muted-foreground">
-          Hinweis: Dieser Bestand ist ein Beispiel für das Design. Preise, Laufleistungen und Verbrauchswerte sind nicht echt.
+          Bestand laut www.bmw-jw-marhoffer.de, Stand {STOCK_DATE}. Irrtümer und Zwischenverkauf vorbehalten.
         </p>
       </div>
     </div>

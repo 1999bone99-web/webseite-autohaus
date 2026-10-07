@@ -75,14 +75,14 @@ export function CommandMenu() {
         title="Suche"
         description="Fahrzeuge und Seiten durchsuchen"
       >
-        <CommandInput placeholder="z. B. Touring, xDrive, Head-Up …" />
+        <CommandInput placeholder="z. B. X5, Luftfederung, Inserat-Nr. …" />
         <CommandList>
           <CommandEmpty>Nichts gefunden. Rufen Sie uns gern an.</CommandEmpty>
           <CommandGroup heading="Fahrzeuge">
             {vehicles.map((v) => (
               <CommandItem
                 key={v.id}
-                value={`${v.model} ${v.variant} ${v.series} ${v.fuel} ${v.category} ${v.color.name} ${v.highlights.join(" ")}`}
+                value={`${v.name} ${v.trim} ${v.series} ${v.fuel} ${v.category} ${v.color.name} ${v.adId} ${v.highlights.join(" ")}`}
                 onSelect={() => go(`/fahrzeuge/${v.id}`)}
               >
                 <span
@@ -90,7 +90,7 @@ export function CommandMenu() {
                   style={{ backgroundColor: v.color.hex }}
                 />
                 <span className="truncate">
-                  {v.model} <span className="text-muted-foreground">{v.variant}</span>
+                  {v.name} <span className="text-muted-foreground">{v.trim}</span>
                 </span>
                 <CommandShortcut className="font-mono tracking-normal">
                   {formatPrice(v.price)}

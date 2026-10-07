@@ -18,7 +18,7 @@ import { filterVehicles, serializeInventory } from "@/lib/search-params"
 import { allFuels, allSeries, vehicles } from "@/lib/vehicles"
 
 const ALL = "alle"
-const budgets = [30_000, 40_000, 50_000, 60_000, 80_000]
+const budgets = [50_000, 60_000, 70_000, 80_000, 100_000]
 
 export function QuickSearch() {
   const [series, setSeries] = useState(ALL)

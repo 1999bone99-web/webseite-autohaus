@@ -1,9 +1,10 @@
 import Link from "next/link"
+import { ImagesIcon } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
 import { CompareButton, FavoriteButton } from "@/components/vehicle/garage-buttons"
 import { SavingMeter } from "@/components/vehicle/saving-meter"
-import { VehicleVisual } from "@/components/vehicle/vehicle-visual"
+import { VehiclePhoto } from "@/components/vehicle/vehicle-photo"
 import { formatKm, formatPrice, formatRegistration } from "@/lib/format"
 import { kwToPs, type Vehicle } from "@/lib/vehicles"
 import { cn } from "@/lib/utils"
@@ -17,15 +18,13 @@ export function VehicleCard({ vehicle: v, className }: { vehicle: Vehicle; class
       )}
     >
       <div className="relative">
-        <VehicleVisual
-          body={v.body}
-          color={v.color.hex}
-          label={`${v.model} in ${v.color.name}`}
-          className="aspect-[16/10] transition-transform duration-500 group-hover:scale-[1.03]"
+        <VehiclePhoto
+          vehicle={v}
+          className="aspect-[4/3] transition-transform duration-500 group-hover:scale-[1.03]"
         />
         <div className="absolute top-3 left-3 flex gap-1.5">
           <Badge className="rounded-full bg-background/85 text-foreground backdrop-blur">{v.category}</Badge>
-          {v.fuel === "Elektro" || v.fuel === "Plug-in-Hybrid" ? (
+          {v.fuel === "Elektro" || v.fuel === "Hybrid" ? (
             <Badge variant="outline" className="rounded-full border-brand/30 bg-brand-soft text-brand">
               {v.fuel}
             </Badge>
@@ -35,19 +34,26 @@ export function VehicleCard({ vehicle: v, className }: { vehicle: Vehicle; class
           <CompareButton id={v.id} />
           <FavoriteButton id={v.id} />
         </div>
+        {v.images.length > 1 && (
+          <span className="absolute bottom-3 left-3 inline-flex items-center gap-1 rounded-full bg-background/85 px-2 py-0.5 font-mono text-[11px] backdrop-blur">
+            <ImagesIcon className="size-3" /> {v.images.length}
+          </span>
+        )}
       </div>
 
       <div className="flex flex-1 flex-col gap-4 p-5">
         <div>
           <p className="font-mono text-[11px] tracking-wider text-muted-foreground uppercase">
-            {v.series} · {v.variant}
+            {v.series} · {v.color.name}
           </p>
           <h3 className="mt-1 text-lg leading-tight font-semibold tracking-tight">
             <Link href={`/fahrzeuge/${v.id}`} className="after:absolute after:inset-0">
-              {v.model}
+              {v.name}
             </Link>
           </h3>
-          <p className="mt-1 truncate text-sm text-muted-foreground">{v.highlights.slice(0, 3).join(" · ")}</p>
+          <p className="mt-1 truncate text-sm text-muted-foreground">
+            {v.highlights.length ? v.highlights.slice(0, 3).join(" · ") : v.trim}
+          </p>
         </div>
 
         <dl className="grid grid-cols-3 gap-2 border-y py-3 font-mono text-xs">

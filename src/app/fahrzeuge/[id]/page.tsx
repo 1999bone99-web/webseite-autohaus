@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { notFound } from "next/navigation"
-import { CheckIcon, PhoneIcon } from "lucide-react"
+import { CheckIcon, ExternalLinkIcon, PhoneIcon } from "lucide-react"
 
 import { PageHeader } from "@/components/shared/page-header"
 import { SectionHeading } from "@/components/shared/section-heading"
@@ -15,10 +15,11 @@ import { CompareButton, FavoriteButton } from "@/components/vehicle/garage-butto
 import { InquiryDialog } from "@/components/vehicle/inquiry-dialog"
 import { SavingMeter } from "@/components/vehicle/saving-meter"
 import { VehicleCard } from "@/components/vehicle/vehicle-card"
-import { VehicleVisual } from "@/components/vehicle/vehicle-visual"
-import { formatConsumption, formatKm, formatPrice, formatRegistration } from "@/lib/format"
+import { VehicleGallery } from "@/components/vehicle/vehicle-gallery"
+import { getEquipment } from "@/lib/equipment"
+import { formatKm, formatPrice, formatRegistration } from "@/lib/format"
 import { site } from "@/lib/site"
-import { bodyLabels, getVehicle, kwToPs, similarVehicles, vehicles } from "@/lib/vehicles"
+import { getVehicle, kwToPs, similarVehicles, STOCK_DATE, vehicles } from "@/lib/vehicles"
 
 export function generateStaticParams() {
   return vehicles.map((v) => ({ id: v.id }))
@@ -29,7 +30,7 @@ export async function generateMetadata({ params }: PageProps<"/fahrzeuge/[id]">)
   const v = getVehicle(id)
   if (!v) return {}
   return {
-    title: `${v.model} ${v.variant}`,
+    title: `${v.name} ${v.trim}`.trim(),
     description: `${v.category}, EZ ${formatRegistration(v.firstRegistration)}, ${formatKm(v.mileage)}, ${kwToPs(v.powerKw)} PS, ${formatPrice(v.price)}.`,
   }
 }
@@ -41,29 +42,29 @@ export default async function VehiclePage({ params }: PageProps<"/fahrzeuge/[id]
   const v = getVehicle(id)
   if (!v) notFound()
 
-  const name = `${v.model} ${v.variant}`
-  const electric = v.fuel === "Elektro"
+  const name = `${v.name} ${v.trim}`.trim()
+  const equipment = getEquipment(v.id)
   const specs: [string, string][] = [
+    ["Inserat-Nr.", v.adId],
     ["Fahrzeugart", v.category],
     ["Erstzulassung", formatRegistration(v.firstRegistration)],
     ["Kilometerstand", formatKm(v.mileage)],
     ["Leistung", `${v.powerKw} kW (${kwToPs(v.powerKw)} PS)`],
     ["Kraftstoff", v.fuel],
-    ["Getriebe", v.transmission],
-    ["Antrieb", v.drive === "xDrive" ? "Allrad (xDrive)" : `${v.drive}antrieb`],
-    ["Karosserie", bodyLabels[v.body]],
-    ["Außenfarbe", v.color.name],
-    ["Innenausstattung", v.interior],
-    ["Vorbesitzer", v.owners === 0 ? "keine" : String(v.owners)],
+    ...(v.transmission ? [["Getriebe", v.transmission] as [string, string]] : []),
+    ...(v.bodyLabel ? [["Karosserie", v.bodyLabel] as [string, string]] : []),
+    ["Farbe", v.color.name],
   ]
 
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Car",
     name,
-    brand: { "@type": "Brand", name: "BMW" },
+    brand: { "@type": "Brand", name: v.make },
     mileageFromOdometer: { "@type": "QuantitativeValue", value: v.mileage, unitCode: "KMT" },
     color: v.color.name,
+    image: v.images.length ? v.images : undefined,
+    vehicleModelDate: v.firstRegistration.slice(0, 4),
     fuelType: v.fuel,
     offers: {
       "@type": "Offer",
@@ -81,42 +82,36 @@ export default async function VehiclePage({ params }: PageProps<"/fahrzeuge/[id]
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
       />
       <PageHeader
-        crumbs={[{ href: "/fahrzeuge", label: "Fahrzeuge" }, { label: v.model }]}
+        crumbs={[{ href: "/fahrzeuge", label: "Fahrzeuge" }, { label: v.name }]}
         title={
           <>
-            {v.model} <span className="text-muted-foreground">{v.variant}</span>
+            {v.name} <span className="text-muted-foreground">{v.trim}</span>
           </>
         }
       >
         <div className="flex gap-2">
           <Badge variant="outline" className="rounded-full px-3 py-1">{v.category}</Badge>
           <Badge variant="outline" className="rounded-full px-3 py-1">{v.fuel}</Badge>
+          <Badge variant="outline" className="rounded-full px-3 py-1 font-mono">{v.adId}</Badge>
         </div>
       </PageHeader>
 
       <div className="container-page grid gap-10 py-10 lg:grid-cols-12">
         <div className="min-w-0 lg:col-span-8">
-          <div className="relative overflow-hidden rounded-3xl border">
-            <VehicleVisual body={v.body} color={v.color.hex} label={`${name} in ${v.color.name}`} className="aspect-[16/10]" />
-            <div className="absolute top-4 right-4 flex gap-2">
+          <div className="relative">
+            <VehicleGallery vehicle={v} />
+            <div className="absolute top-4 right-4 z-10 flex gap-2">
               <CompareButton id={v.id} />
               <FavoriteButton id={v.id} />
             </div>
-            <div className="absolute bottom-4 left-4 flex items-center gap-2 rounded-full bg-background/85 py-1.5 pr-4 pl-1.5 text-sm backdrop-blur">
-              <span className="size-6 rounded-full ring-1 ring-border" style={{ backgroundColor: v.color.hex }} />
-              {v.color.name}
-            </div>
           </div>
-          <p className="mt-3 text-xs text-muted-foreground">
-            Darstellung symbolisch. Echte Fotos des Fahrzeugs schicken wir Ihnen gern auf Anfrage.
-          </p>
 
           <dl className="mt-8 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border bg-border sm:grid-cols-4">
             {[
               ["Erstzulassung", formatRegistration(v.firstRegistration)],
               ["Laufleistung", formatKm(v.mileage)],
               ["Leistung", `${kwToPs(v.powerKw)} PS`],
-              ["Getriebe", v.transmission],
+              ["Kraftstoff", v.fuel],
             ].map(([k, val]) => (
               <div key={k} className="bg-card p-5">
                 <dt className="font-mono text-xs text-muted-foreground">{k}</dt>
@@ -138,8 +133,23 @@ export default async function VehiclePage({ params }: PageProps<"/fahrzeuge/[id]
                   <Badge key={h} className="rounded-full bg-brand-soft px-3 py-1 text-brand">{h}</Badge>
                 ))}
               </div>
-              <div className="mt-8 grid gap-8 sm:grid-cols-2">
-                {v.equipment.map((g) => (
+              {equipment.special.length > 0 && (
+                <div className="mt-8">
+                  <h3 className="font-mono text-xs tracking-wider text-muted-foreground uppercase">
+                    Sonderausstattung laut Inserat
+                  </h3>
+                  <ul className="mt-3 grid gap-x-8 gap-y-2 sm:grid-cols-2">
+                    {equipment.special.map((i) => (
+                      <li key={i} className="flex items-start gap-2 text-sm">
+                        <CheckIcon className="mt-0.5 size-4 shrink-0 text-brand" />
+                        {i}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              <div className="mt-10 grid gap-8 sm:grid-cols-2">
+                {equipment.groups.map((g) => (
                   <div key={g.group}>
                     <h3 className="font-mono text-xs tracking-wider text-muted-foreground uppercase">{g.group}</h3>
                     <ul className="mt-3 grid gap-2">
@@ -169,39 +179,50 @@ export default async function VehiclePage({ params }: PageProps<"/fahrzeuge/[id]
             </TabsContent>
 
             <TabsContent value="umwelt" className="mt-6">
-              <div className="grid gap-8 sm:grid-cols-2">
-                <dl className="grid gap-4 text-sm">
-                  <div>
-                    <dt className="text-muted-foreground">
-                      {electric ? "Stromverbrauch" : "Verbrauch"} kombiniert (WLTP)
-                    </dt>
-                    <dd className="mt-1 font-mono text-lg">{formatConsumption(v.consumption, electric)}</dd>
-                  </div>
-                  <div>
-                    <dt className="text-muted-foreground">CO₂-Emissionen kombiniert</dt>
-                    <dd className="mt-1 font-mono text-lg">{v.co2} g/km</dd>
-                  </div>
-                </dl>
-                <div>
-                  <p className="text-sm text-muted-foreground">CO₂-Klasse</p>
-                  <ol className="mt-2 grid gap-1">
-                    {co2Scale.map((c, i) => (
-                      <li key={c} className="flex items-center gap-2">
-                        <span
-                          className="flex h-6 items-center rounded-r-md pl-2 font-mono text-xs font-semibold text-white"
-                          style={{
-                            width: `${30 + i * 10}%`,
-                            backgroundColor: `oklch(${0.55 + i * 0.02} 0.16 ${150 - i * 22})`,
-                          }}
-                        >
-                          {c}
-                        </span>
-                        {c === v.co2Class && <span className="font-mono text-xs font-semibold">◀ {c}</span>}
-                      </li>
-                    ))}
-                  </ol>
+              {v.consumption || v.co2 != null || v.co2Class ? (
+                <div className="grid gap-8 sm:grid-cols-2">
+                  <dl className="grid content-start gap-4 text-sm">
+                    {v.consumption && (
+                      <div>
+                        <dt className="text-muted-foreground">Energieverbrauch kombiniert</dt>
+                        <dd className="mt-1 font-mono text-lg">{v.consumption}</dd>
+                      </div>
+                    )}
+                    {v.co2 != null && (
+                      <div>
+                        <dt className="text-muted-foreground">CO₂-Emissionen kombiniert</dt>
+                        <dd className="mt-1 font-mono text-lg">{v.co2} g/km</dd>
+                      </div>
+                    )}
+                  </dl>
+                  {v.co2Class && (
+                    <div>
+                      <p className="text-sm text-muted-foreground">CO₂-Klasse</p>
+                      <ol className="mt-2 grid gap-1">
+                        {co2Scale.map((c, i) => (
+                          <li key={c} className="flex items-center gap-2">
+                            <span
+                              className="flex h-6 items-center rounded-r-md pl-2 font-mono text-xs font-semibold text-white"
+                              style={{
+                                width: `${30 + i * 10}%`,
+                                backgroundColor: `oklch(${0.55 + i * 0.02} 0.16 ${150 - i * 22})`,
+                              }}
+                            >
+                              {c}
+                            </span>
+                            {c === v.co2Class && <span className="font-mono text-xs font-semibold">◀ {c}</span>}
+                          </li>
+                        ))}
+                      </ol>
+                    </div>
+                  )}
                 </div>
-              </div>
+              ) : (
+                <p className="text-sm text-muted-foreground">
+                  Im Inserat sind keine Verbrauchswerte angegeben. Wir nennen sie Ihnen gern auf Anfrage.
+                </p>
+              )}
+              <p className="mt-6 text-xs text-muted-foreground">Werte wie im Inserat des Autohauses angegeben.</p>
             </TabsContent>
           </Tabs>
         </div>
@@ -211,7 +232,7 @@ export default async function VehiclePage({ params }: PageProps<"/fahrzeuge/[id]
             <div className="rounded-2xl border bg-card p-6">
               <p className="font-mono text-xs tracking-wider text-muted-foreground uppercase">Unser Preis</p>
               <p className="mt-1 text-4xl font-semibold tracking-tight">{formatPrice(v.price)}</p>
-              <p className="mt-1 text-xs text-muted-foreground">inkl. MwSt.</p>
+              <p className="mt-1 text-xs text-muted-foreground">inkl. MwSt. · Stand {STOCK_DATE}</p>
               <SavingMeter vehicle={v} detailed className="mt-6" />
               <Separator className="my-6" />
               <div className="grid gap-2">
@@ -226,6 +247,14 @@ export default async function VehiclePage({ params }: PageProps<"/fahrzeuge/[id]
               <p className="mt-4 text-xs text-muted-foreground">
                 Verkauf: {site.hours.sales.map((h) => `${h.days} ${h.time}`).join(", ")}
               </p>
+              <a
+                href={v.sourceUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-3 inline-flex items-center gap-1 text-xs text-muted-foreground underline-offset-4 hover:underline"
+              >
+                Original-Inserat {v.adId} <ExternalLinkIcon className="size-3" />
+              </a>
             </div>
             <FinanceCalculator price={v.price} />
           </div>

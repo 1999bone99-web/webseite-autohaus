@@ -14,10 +14,11 @@ import {
 } from "@/components/ui/accordion"
 import { formatKm, formatPrice } from "@/lib/format"
 import { inventoryParsers } from "@/lib/search-params"
-import { allFuels, allSeries, bodyLabels, categories, vehicles, type BodyType } from "@/lib/vehicles"
+import { allFuels, allSeries, bodyLabels, priceRange, stockCategories, vehicles, type BodyType } from "@/lib/vehicles"
 
-const PRICE_MAX = Math.ceil(Math.max(...vehicles.map((v) => v.price)) / 5000) * 5000
-const KM_MAX = Math.ceil(Math.max(...vehicles.map((v) => v.mileage)) / 5000) * 5000
+const PRICE_MIN = Math.floor(priceRange.min / 5000) * 5000
+const PRICE_MAX = Math.ceil(priceRange.max / 5000) * 5000
+const KM_MAX = Math.ceil(Math.max(...vehicles.map((v) => v.mileage)) / 10_000) * 10_000
 
 type ArrayKey = "baureihe" | "kategorie" | "kraftstoff" | "karosserie"
 
@@ -71,13 +72,13 @@ export function Filters() {
         <AccordionItem value="kategorie">
           <AccordionTrigger>Fahrzeugart</AccordionTrigger>
           <AccordionContent>
-            {group("kategorie", categories.map((c) => ({ value: c.name, label: c.name })))}
+            {group("kategorie", stockCategories.map((c) => ({ value: c.name, label: c.name })))}
           </AccordionContent>
         </AccordionItem>
         <AccordionItem value="baureihe">
           <AccordionTrigger>Baureihe</AccordionTrigger>
           <AccordionContent>
-            {group("baureihe", allSeries.map((s) => ({ value: s, label: `BMW ${s}` })))}
+            {group("baureihe", allSeries.map((s) => ({ value: s, label: /^[A-Z][a-z]/.test(s) || s === "MINI" ? s : `BMW ${s}` })))}
           </AccordionContent>
         </AccordionItem>
         <AccordionItem value="preis">
@@ -89,9 +90,9 @@ export function Filters() {
                 <span className="font-mono">{formatPrice(f.preisMax ?? PRICE_MAX)}</span>
               </div>
               <Slider
-                min={20_000}
+                min={PRICE_MIN}
                 max={PRICE_MAX}
-                step={2_500}
+                step={5_000}
                 value={[f.preisMax ?? PRICE_MAX]}
                 onValueChange={([v]) => void setF({ preisMax: v >= PRICE_MAX ? null : v })}
                 aria-label="Maximaler Preis"
@@ -103,9 +104,9 @@ export function Filters() {
                 <span className="font-mono">{formatKm(f.kmMax ?? KM_MAX)}</span>
               </div>
               <Slider
-                min={5_000}
+                min={10_000}
                 max={KM_MAX}
-                step={5_000}
+                step={10_000}
                 value={[f.kmMax ?? KM_MAX]}
                 onValueChange={([v]) => void setF({ kmMax: v >= KM_MAX ? null : v })}
                 aria-label="Maximale Laufleistung"
@@ -122,7 +123,9 @@ export function Filters() {
           <AccordionContent>
             {group(
               "karosserie",
-              (Object.keys(bodyLabels) as BodyType[]).map((b) => ({ value: b, label: bodyLabels[b] }))
+              (Object.keys(bodyLabels) as BodyType[])
+                .filter((b) => vehicles.some((v) => v.body === b))
+                .map((b) => ({ value: b, label: bodyLabels[b] }))
             )}
           </AccordionContent>
         </AccordionItem>

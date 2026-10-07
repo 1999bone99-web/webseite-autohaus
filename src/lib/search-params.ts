@@ -6,7 +6,7 @@ import {
   parseAsStringLiteral,
 } from "nuqs"
 
-import type { Vehicle } from "@/lib/vehicles"
+import { savingPercent, type Vehicle } from "@/lib/vehicles"
 
 export const sortOptions = ["empfohlen", "preis-auf", "preis-ab", "km-auf", "ersparnis", "neueste"] as const
 export type SortOption = (typeof sortOptions)[number]
@@ -48,7 +48,7 @@ export function filterVehicles(list: Vehicle[], f: InventoryFilter) {
     "preis-auf": (a, b) => a.price - b.price,
     "preis-ab": (a, b) => b.price - a.price,
     "km-auf": (a, b) => a.mileage - b.mileage,
-    ersparnis: (a, b) => b.msrp - b.price - (a.msrp - a.price),
+    ersparnis: (a, b) => (savingPercent(b) ?? -1) - (savingPercent(a) ?? -1),
     neueste: (a, b) => b.firstRegistration.localeCompare(a.firstRegistration),
   }
   return [...result].sort(by[f.sort])

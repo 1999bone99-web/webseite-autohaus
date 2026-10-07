@@ -44,16 +44,32 @@ Kernversprechen des Hauses (bis zu 45 % unter Neupreis) überall sichtbar im Mit
 `/` · `/fahrzeuge` (Filter, Sortierung) · `/fahrzeuge/[id]` · `/vergleich` · `/merkliste` ·
 `/werkstatt` (Terminanfrage) · `/export` · `/kontakt` · `/impressum` · `/datenschutz`
 
+## Fahrzeugbestand
+
+Der Bestand stammt von www.bmw-jw-marhoffer.de (Stand 07.10.2026, 94 Fahrzeuge) und liegt in
+`src/data/vehicles.json` und `src/data/equipment.json`. Fotos werden direkt vom Händlersystem
+(`www.webauto.de/imgcars/…`) geladen. Bei Fahrzeugen ohne Fotos zeigt die Seite eine gezeichnete Silhouette.
+
+Neu einlesen:
+
+```bash
+bash scripts/bestand/fetch.sh
+```
+
+Danach `STOCK_DATE` in `src/lib/vehicles.ts` anpassen, committen, pushen.
+
+Hinweise zu den Quelldaten:
+- Den „Ersparnis“-Balken gibt es nur, wenn das Inserat einen Listenneupreis nennt (77 von 94).
+- Einige Verbrauchsangaben in den Inseraten sind offensichtlich falsch (z. B. 76,0 l/100 km beim X5 30d,
+  34,0 l/100 km beim XM 50e). Sie werden unverändert übernommen und sollten im Händlersystem korrigiert werden.
+
 ## Vor dem Livegang offen
 
-- **Fahrzeugbestand ist Beispieldaten** (`src/lib/vehicles.ts`). Preise, km und Verbrauchswerte sind erfunden.
-  Anbindung an den echten Bestand (z. B. mobile.de-Schnittstelle oder DMS) fehlt.
-- **Fahrzeugbilder** sind stilisierte SVG-Silhouetten (`vehicle-visual.tsx`). Durch echte Fotos ersetzen.
+- Bestand automatisch aktuell halten (z. B. täglicher Import oder Schnittstelle des Händlersystems)
+  statt der Momentaufnahme.
 - **Formulare** validieren, senden aber noch nichts (`src/app/actions.ts`). Mailversand oder CRM anbinden.
-- **Inhalte abstimmen**: Werkstattleistungen, Exportablauf und FAQ sind Entwürfe. Adresse, Telefonnummern
-  und Öffnungszeiten stammen aus öffentlichen Verzeichnissen (`src/lib/site.ts`) und sollten geprüft werden.
+- **Inhalte abstimmen**: Werkstattleistungen, Exportablauf und FAQ sind Entwürfe.
 - **Impressum und Datenschutz** sind Platzhalter.
-- Pflichtangaben nach Pkw-EnVKV (Verbrauch/CO₂) sind vorgesehen, Werte müssen aus echten Daten kommen.
 - Markenrecht: kein BMW-Logo verwendet. Ob und wie das Autohaus BMW-Markenzeichen nutzen darf, klären.
 
 ## shadcn-Komponenten

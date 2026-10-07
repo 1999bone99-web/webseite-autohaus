@@ -27,7 +27,7 @@ import {
 } from "@/components/ui/sheet"
 import { Separator } from "@/components/ui/separator"
 import { navigation, site } from "@/lib/site"
-import { categories, vehicles } from "@/lib/vehicles"
+import { stockCategories, vehicles } from "@/lib/vehicles"
 import { cn } from "@/lib/utils"
 import { useGarage } from "@/stores/garage"
 
@@ -71,7 +71,7 @@ export function SiteHeader() {
                       </Link>
                     </NavigationMenuLink>
                   </li>
-                  {categories.map((c) => (
+                  {stockCategories.map((c) => (
                     <li key={c.name}>
                       <NavigationMenuLink asChild>
                         <Link href={`/fahrzeuge?kategorie=${encodeURIComponent(c.name)}`} className="rounded-lg p-3">

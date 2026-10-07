@@ -40,6 +40,8 @@ export type Vehicle = {
   co2Class: string | null
   highlights: string[]
   images: string[]
+  /** Im Inserat steht, dass weitere Fotos auf Wunsch per E-Mail kommen */
+  photosOnRequest: boolean
   sourceUrl: string
 }
 

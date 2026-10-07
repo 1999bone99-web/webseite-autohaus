@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { notFound } from "next/navigation"
-import { CalendarIcon, ExternalLinkIcon, PhoneIcon } from "lucide-react"
+import { CalendarIcon, ExternalLinkIcon, ImagesIcon, PhoneIcon } from "lucide-react"
 
 import { PageHeader } from "@/components/shared/page-header"
 import { SectionHeading } from "@/components/shared/section-heading"
@@ -17,6 +17,7 @@ import { SavingMeter } from "@/components/vehicle/saving-meter"
 import { VehicleCard } from "@/components/vehicle/vehicle-card"
 import { EquipmentList } from "@/components/vehicle/equipment-list"
 import { VehicleGallery } from "@/components/vehicle/vehicle-gallery"
+import { contact } from "@/lib/content"
 import { getEquipment } from "@/lib/equipment"
 import { formatKm, formatPrice, formatRegistration } from "@/lib/format"
 import { site } from "@/lib/site"
@@ -237,6 +238,20 @@ export default async function VehiclePage({ params }: PageProps<"/fahrzeuge/[id]
               <p className="mt-4 text-xs text-muted-foreground">
                 Verkauf: {site.hours.sales.map((h) => `${h.days} ${h.time}`).join(", ")}
               </p>
+              {(v.photosOnRequest || v.images.length === 0) && (
+                <a
+                  href={`mailto:${contact.email}?subject=${encodeURIComponent(`Fotos zu ${v.name}, Inserat ${v.adId}`)}`}
+                  className="mt-4 flex items-start gap-3 rounded-xl bg-muted p-3 text-sm transition hover:bg-accent"
+                >
+                  <ImagesIcon className="mt-0.5 size-4 shrink-0 text-brand" />
+                  <span>
+                    <span className="block font-medium">
+                      {v.images.length ? "Weitere Fotos per E-Mail" : "Fotos per E-Mail anfordern"}
+                    </span>
+                    <span className="text-muted-foreground">Wir schicken Ihnen gern zusätzliche Bilder zu diesem Fahrzeug.</span>
+                  </span>
+                </a>
+              )}
               <a
                 href={v.sourceUrl}
                 target="_blank"

@@ -7,6 +7,10 @@ idx = dict(l.split(' ', 1) for l in open(os.path.join(src, 'index.txt')).read().
 
 GROUPS = {'Komfort': 'Komfort', 'Unterhaltung/Media': 'Infotainment', 'Extras': 'Extras', 'Sicherheit': 'Sicherheit', 'Sonstiges': 'Sonstiges'}
 BOILER = re.compile(r'(CO2 Umfang|Abgastechnik|EU-spezifisch|Spezifische Zusatz|Warndreieck|Sprachversion|Deutschland-Ausf|Bordliteratur|Kältemittel|Kaeltemittel|Ölwartung|COC|Steuerung|Dummy|Entfall|Kilometertacho|Dekodierung|Sondersteuerung|Adapter|Radschraubensicherung|Reifenpannenset|Notruf|Teleservices|Fußgängerschutz|Fussgängerschutz|Fußgänger-Schutz|Rekuperationssystem|8-fach|Exterieurumfänge|Interieurumfänge|Zusatzumf)', re.I)
+# Hinweise im Inseratstext, die keine Ausstattung sind
+PHOTOS_ON_REQUEST = re.compile(r'(bilder|pictures?|picures).*(mail)', re.I)
+NOT_EQUIPMENT = re.compile(r'\b(EUR|Mwst|MwSt|TAX)\b')
+
 HIGHLIGHT_RULES = [
     (r'Executive Lounge', 'Executive Lounge'),
     (r'Theatre Screen|Cinema', 'BMW Theatre Screen'),
@@ -135,11 +139,13 @@ for n, url in sorted(idx.items(), key=lambda x: int(x[0])):
         mm = re.search(r'(?:Neupreis|NP|neu)\s*([\d.]{6,})', title)
         if mm and price and num(mm.group(1)) > price:
             msrp = num(mm.group(1))
+    photos_on_request = any(PHOTOS_ON_REQUEST.search(l) for l in desc + [title])
     special = []
     for l in desc:
         for part in (l.split('•') if '•' in l else ([l] if ',' not in l else l.split(',  '))):
             p = re.sub(r'^\s*[0-9A-Z]{4}\s+', '', part.strip()).strip(' ,')
-            if len(p) < 3 or len(p) > 90 or re.search(r'neupreis|Sonderausstattung', p, re.I) or BOILER.search(p):
+            if (len(p) < 3 or len(p) > 90 or re.search(r'neupreis|Sonderausstattung', p, re.I) or BOILER.search(p)
+                    or PHOTOS_ON_REQUEST.search(p) or NOT_EQUIPMENT.search(p)):
                 continue
             if p not in special:
                 special.append(p)
@@ -172,7 +178,7 @@ for n, url in sorted(idx.items(), key=lambda x: int(x[0])):
         fuel=after('Kraftstoffart:'), transmission=after('Getriebe:'),
         color={'name': color, 'hex': COLOR_HEX.get(color, '#6f747a')},
         consumption=cons, co2=co2, co2Class=co2cls,
-        highlights=highlights[:6], images=imgs, sourceUrl=url,
+        highlights=highlights[:6], images=imgs, photosOnRequest=photos_on_request, sourceUrl=url,
     ))
     equipment[vid] = {'groups': [{'group': g, 'items': it} for g, it in groups.items() if it], 'special': special}
 
